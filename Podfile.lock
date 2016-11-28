@@ -1,0 +1,30 @@
+PODS:
+  - ChameleonFramework/Default (2.1.0)
+  - ChameleonFramework/Swift (2.1.0):
+    - ChameleonFramework/Default
+  - NVActivityIndicatorView (2.12)
+  - ReachabilitySwift (2.4)
+
+DEPENDENCIES:
+  - ChameleonFramework/Swift (~> 2.1)
+  - NVActivityIndicatorView (from `https://github.com/ninjaprox/NVActivityIndicatorView.git`, branch `swift2.3`)
+  - ReachabilitySwift (~> 2.4)
+
+EXTERNAL SOURCES:
+  NVActivityIndicatorView:
+    :branch: swift2.3
+    :git: https://github.com/ninjaprox/NVActivityIndicatorView.git
+
+CHECKOUT OPTIONS:
+  NVActivityIndicatorView:
+    :commit: ac4325492550b9ec9516e3a9b6e28b2c07faa1c6
+    :git: https://github.com/ninjaprox/NVActivityIndicatorView.git
+
+SPEC CHECKSUMS:
+  ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
+  NVActivityIndicatorView: de8be03826726ad99cdfacf7fe09e88cbfeef911
+  ReachabilitySwift: dc7452dab85ff881904215e1a113326ad8d07beb
+
+PODFILE CHECKSUM: 95e60d69b358d9fe87667bf6e509ee2e0533fa05
+
+COCOAPODS: 1.1.0.beta.1
