@@ -13,46 +13,7 @@ import CoreData
 
 extension TheMovieDB {
     
-//    func getMoviesFromListWithId(id: String, context: NSManagedObjectContext?, completionHandler: (result: NSMutableOrderedSet?, error: NSError?) -> Void) {
-//        
-//        
-//        // Query TMDB
-//        let resource = TheMovieDB.Resources.ListID
-//        let parameters = [TheMovieDB.Keys.ID : id]
-//        
-//        TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters){ JSONResult, error  in
-//            if let error = error {
-//                print(error)
-//                completionHandler(result: nil, error: error)
-//            } else {
-//                
-//                let domainText = "Creating list"
-//                guard let listDictionary = JSONResult as? [String: AnyObject] else {
-//                    let errorText = "Can't create dictionary from result"
-//                    print("\(errorText)")
-//                    
-//                    completionHandler(result: nil, error: NSError(domain: domainText, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse list"]))
-//
-//                    return
-//                }
-//                
-//                let newList = List(dictionary: listDictionary, context: context!)
-//                
-//                if let results = JSONResult.valueForKey("items") as? [[String : AnyObject]] {
-//                    
-//                    let movies = Movie.moviesFromResults(results, listID: id, context: context)
-//                    newList.movies = movies
-//                    completionHandler(result: movies, error: nil)
-//                } // if let
-//                else {
-//                    completionHandler(result: nil, error: NSError(domain: "list parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse list"]))
-//                }
-//            }
-//        } // End of task for resource
-//    }
-    
-    
-    func getMoviesFromList(list: List, completionHandler: (result: [[String : AnyObject]]?, error: NSError?) -> Void) {
+    func getMoviesFromList(_ list: List, completionHandler: @escaping (_ result: [[String : AnyObject]]?, _ error: NSError?) -> Void) {
         //removed nsmanaged context from function. -was not used
         
         // Query TMDB
@@ -64,7 +25,9 @@ extension TheMovieDB {
         TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters){ JSONResult, error  in
             if let error = error {
                 print(error)
-                completionHandler(result: nil, error: error)
+                completionHandler(nil, error)
+                return
+                
             } else {
                 
                 let domainText = "Creating list"
@@ -72,27 +35,27 @@ extension TheMovieDB {
                     let errorText = "Can't create dictionary from result"
                     print("\(errorText)")
                     
-                    completionHandler(result: nil, error: NSError(domain: domainText, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse list"]))
+                    completionHandler(nil, NSError(domain: domainText, code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse list"]))
                     
                     return
                 }
                 
-                if let results = JSONResult.valueForKey("items") as? [[String : AnyObject]] {
+                if let results = JSONResult?.value(forKey: "items") as? [[String : AnyObject]] {
                     
                     //let movies = Movie.moviesFromResults(results, listID: list.id!)
                     //list.movies = movies
-                    completionHandler(result: results, error: nil)
+                    completionHandler(results, nil)
                     
                 } // if let
                 else {
-                    completionHandler(result: nil, error: NSError(domain: "list parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse list"]))
+                    completionHandler(nil, NSError(domain: "list parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse list"]))
                 }
             }
         } // End of task for resource
     }
 
     
-    func getGenres(resource: String, completionHandler: (result: [Int: String]?, error: NSError?) -> Void ) {
+    func getGenres(_ resource: String, completionHandler: @escaping (_ result: [Int: String]?, _ error: NSError?) -> Void ) {
         
         // Query TMDB
         let resource = TheMovieDB.Resources.MovieGenreList
@@ -103,10 +66,10 @@ extension TheMovieDB {
             
             if let error = error {
                 print(error)
-                completionHandler(result: nil, error: error)
+                completionHandler(nil, error)
                 
             } else {
-               if let results = JSONResult.valueForKey("genres") as? [[String: AnyObject]] {
+               if let results = JSONResult?.value(forKey: "genres") as? [[String: AnyObject]] {
                     print(results)
                     for i in results {
                         if let id = i["id"] as? Int {
@@ -116,8 +79,57 @@ extension TheMovieDB {
                         }
                     } // loop
                 }
-                completionHandler(result: genres, error: nil)
+                completionHandler(genres, nil)
             }
         } // End of task for resource
     }
+    
+    func getVideos(_ movieId: NSNumber, completionHandler: @escaping (_ result: [[String: AnyObject]]?, _ error: NSError?) -> Void ) {
+
+        let resource = TheMovieDB.Resources.MovieIdVideos
+        //let mutableParameters = [String:AnyObject]()
+       let  mutableParameters = [Keys.ID: movieId]
+        
+        TheMovieDB.sharedInstance().taskForResource(resource, parameters: mutableParameters) { JSONResult, error in
+            
+            print("\(JSONResult)")
+
+            if let error = error {
+                print("\(error.localizedDescription)")
+                completionHandler(nil, error)
+                return
+                
+            } else {
+                if let results = JSONResult?.value(forKey: "results") as? [[String: AnyObject]] {
+                    log.info("found \(results.count) videos"  )
+                    completionHandler(results, nil)
+                    return
+                }
+            }
+            
+            log.error("Could not find value for key")
+        
+//        let postData = NSData(data: "{}".dataUsingEncoding(NSUTF8StringEncoding)!)
+//        
+//        var request =URLRequest(URL: NSURL(string: "https://api.themoviedb.org/3/movie/%7Bmovie_id%7D/videos?language=en-US&api_key=%3C%3Capi_key%3E%3E")!,
+//                                          cachePolicy: .UseProtocolCachePolicy,
+//                                          timeoutInterval: 10.0)
+//        request.HTTPMethod = "GET"
+//        request.HTTPBody = postData
+//        
+//        let session = NSURLSession.sharedSession()
+//        let dataTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+//            if (error != nil) {
+//                log.error("\(error?.localizedDescription)")
+//            } else {
+//                let httpResponse = response as? NSHTTPURLResponse
+//                //println(httpResponse)
+//            }
+//        })
+//        
+//        dataTask.resume()
+            return
+    }
  }
+
+}

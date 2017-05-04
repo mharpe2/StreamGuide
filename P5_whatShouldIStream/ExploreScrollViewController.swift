@@ -8,10 +8,6 @@
 
 import UIKit
 import CoreData
-
-
-//import ChameleonFramework
-//import NVActivityIndicatorView
 import ImageIO
 
 class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate
@@ -23,18 +19,15 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
     let segment: [String] = ["top", "genres", "goingaway", "upcoming"]
     var selectedListGroup = 0
     var predicate = NSPredicate()
-    let log = XCGLogger.defaultInstance()
     var storedOffsets = [Int: CGFloat]()
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var mainViewActivityIndicator: UIActivityIndicatorView!
-    
+
     var imageView: UIImageView!
     
     
     //MARK: CoreData ------------------------------------------------------------------
-    
     var listFRC: FetchedResultsController<List>!
     
     lazy var mainContext = {
@@ -49,10 +42,10 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
         return ListFetchedResultsTableViewControllerDelegate(tableView: self.tableView)
     }()
     
-    private func getListFRCWithGroup(name: String) -> FetchedResultsController<List>
+    fileprivate func getListFRCWithGroup(_ name: String) -> FetchedResultsController<List>
     {
         
-        let fetchRequest = NSFetchRequest(entityName: List.entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: List.entityName)
         fetchRequest.predicate = NSPredicate(format: "group = %@", name)
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
         fetchRequest.sortDescriptors = []
@@ -88,15 +81,12 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 self.listFRC.setDelegate(self.frcDelegate)
                 try self.listFRC.performFetch()
-                self.tableView.dataSource = self
-                self.tableView.delegate = self
-                
-                
+            
             } catch  _ {
-                self.log.error(" Error fetching lists and movies")
+                log.error(" Error fetching lists and movies")
             }
             
-            self.log.info("Found \(self.listFRC.count) ")
+            log.info("Found \(self.listFRC.count) ")
         }
         
         self.mainContext().performBlockAndWait() {
@@ -110,10 +100,10 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //MARK: TableView Methods ------------------------------------------------------------
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //return listFRC.sections?.count ?? 1
         
-        if let sections = listFRC.sections  where sections.count > 0 {
+        if let sections = listFRC.sections, sections.count > 0 {
             return sections[section].objects.count
         } else {
             return 0
@@ -122,40 +112,50 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if let cell = tableView.dequeueReusableCellWithIdentifier("streamServiceRow")  as? StreamingServiceRow //dequeueReusableCell(withIdentifier: "streamingServiceRow") as? StreamingServiceRow {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "streamingServiceRow")  as? StreamingServiceRow //dequeueReusableCell(withIdentifier: "streamingServiceRow") as? StreamingServiceRow {
         {
-            log.verbose("returning cell \(cell.description)"    )
+            log.verbose("returning cell \(cell.description)")
+            //cell.collectionView = self.collectionView
             return cell
         } else {
             log.verbose("returning empty streaming service row" )
-            return StreamingServiceRow()
+            let cell = StreamingServiceRow()
+            //cell.collectionView = self.collectionView
+            return cell
         }
         
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         log.info("Setting cell to index \(indexPath.section)")
-        guard let tableViewCell = cell as? StreamingServiceRow else { return }
+        guard let tableViewCell = cell as? StreamingServiceRow else {
+            log.error("tableView cell could not be set to cell as? StreamingServiceRow")
+            return
+        }
+       
         tableViewCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.section)
         tableViewCell.collectionViewOffset = storedOffsets[indexPath.section] ?? 0
     }
     
-    func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        guard let tableViewCell = cell as? StreamingServiceRow else { return }
+        guard let tableViewCell = cell as? StreamingServiceRow else {
+            log.error("tableView cell could not be set to cell as? StreamingServiceRow")
+            return
+        }
         
         storedOffsets[indexPath.section] = tableViewCell.collectionViewOffset
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         
         return listFRC.sections?.count ?? 0
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         guard let sections = listFRC.sections else { return nil }
         return sections[section].objects[0].name ?? nil
@@ -163,8 +163,8 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: Segmented Controller
     
-    // change segment
-    @IBAction func segmentedControlChanged(sender: UISegmentedControl) {
+    
+    @IBAction func segmentedControlChanged(_ sender: UISegmentedControl) {
         
         if sender.selectedSegmentIndex > segment.count {
             return
@@ -173,17 +173,21 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
         let selectedSegment = segment[sender.selectedSegmentIndex]
         listFRC = getListFRCWithGroup( selectedSegment )
         listFRC.setDelegate(frcDelegate)
+        
+        log.info("switch group to \(selectedSegment)")
+        
         do {
             try self.listFRC.performFetch()
         }
         catch _ {
-            log.error("switch group to \(selectedSegment)")
+            log.error("error switching group to \(selectedSegment)")
+            return
         }
         
         
         var rankedGenres: [Genre]? = []
         if selectedSegment == "genres" {
-            let fetchRequest = NSFetchRequest(entityName: Genre.entityName)
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Genre.entityName)
             fetchRequest.sortDescriptors = []
             
             mainContext().performBlock() {
@@ -218,22 +222,25 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                     }
                 } catch _ {
-                    self.log.error("fuckall")
+                    log.error("fuckall")
                 }
                 
             }
-        }
+        } // end of special "genres" case
+
     }
     
     
-    func makeThumbNail(image: UIImage) -> UIImage {
+    
+    
+    func makeThumbNail(_ image: UIImage) -> UIImage {
         
-        let size = CGSizeApplyAffineTransform(image.size, CGAffineTransformMakeScale(0.25, 0.25))
+        let size = image.size.applying(CGAffineTransform(scaleX: 0.25, y: 0.25))
         let hasAlpha = false
         let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
         
         UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
-        image.drawInRect( CGRect(origin: CGPointZero, size: size))
+        image.draw( in: CGRect(origin: CGPoint.zero, size: size))
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()
@@ -286,41 +293,41 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
 
 extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         if let sections = listFRC.sections {
             return sections.count
         }
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let sections = listFRC.sections else {
+            log.error("Could not get listFRC.sections")
             return 0
         }
         
         log.info("tag: \(collectionView.tag)")
-        return sections[collectionView.tag].objects[0].movies.count ?? 0
+        return sections[collectionView.tag].objects[0].movies!.count ?? 0
         
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        
-        //cell.backgroundColor = model[collectionView.tag][indexPath.item]
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         /* Get cell type */
         let cellReuseIdentifier = "MovieCollectionViewCell"
         
-        guard let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as? MovieCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
         
         guard let sections = listFRC.sections else {
+            log.error("Could not get listFRC.sections")
             return UICollectionViewCell()
         }
         
         let allListsInSection = sections[collectionView.tag].objects
         let movies = allListsInSection[0].movies
-        let movie = movies[indexPath.row] as! Movie
+        let movie = movies![indexPath.row] as! Movie
         
         // Set cell defaults
         cell.picture!.image = UIImage(named: "filmRole")
@@ -330,7 +337,7 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             cell.activityIndicator.startAnimating()
             
             if let savedImage = movie.posterImage {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     
                     cell.picture!.image = savedImage
                     cell.activityIndicator.stopAnimating()
@@ -354,23 +361,22 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         print("Collection view at row \(collectionView.tag) selected index path \(indexPath)")
         
         guard let sections = listFRC.sections else {
+            log.error("Could not get listFRC.sections")
             return
         }
         
         let allListsInSection = sections[collectionView.tag].objects
         let movies = allListsInSection[0].movies
-        let movie = movies[indexPath.row] as! Movie
+        let movie = movies![indexPath.row] as! Movie
         
-        let movieDetailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("awesomeMovieDetailViewController") as! awesomeMovieDetailViewController
-        
+        let movieDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "MovieDetailViewController") as! MovieDetailViewController
         movieDetailViewController.movie = movie
-        self.presentViewController(movieDetailViewController, animated: true) {     //(movieDetailViewController, animated: true) {
-            
+        self.present(movieDetailViewController, animated: true) {                
             // Code
         }
     }

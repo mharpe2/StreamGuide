@@ -9,80 +9,80 @@ import Foundation
 
 class TheMovieDB : NSObject {
     
-    typealias CompletionHander = (result: AnyObject!, error: NSError?) -> Void
+    typealias CompletionHander = (_ result: AnyObject?, _ error: NSError?) -> Void
     
-    var session: NSURLSession
+    var session: URLSession
     
     var config = Config.unarchivedInstance() ?? Config()
     
     override init() {
-        session = NSURLSession.sharedSession()
         super.init()        
     }
 
     
     // MARK: - All purpose task method for data
     
-    func taskForResource(resource: String, parameters: [String : AnyObject], completionHandler: CompletionHander) -> NSURLSessionDataTask {
+    func taskForResource(_ resource: String, parameters: [String : AnyObject], completionHandler: @escaping CompletionHander) -> URLSessionDataTask {
         
         var mutableParameters = parameters
         var mutableResource = resource
         
         // Add in the API Key
-        mutableParameters["api_key"] = Constants.ApiKey
+        mutableParameters["api_key"] = Constants.ApiKey as AnyObject
         
         // Substitute the id parameter into the resource
-        if resource.rangeOfString(":id") != nil {
+        if resource.range(of: ":id") != nil {
             assert(parameters[Keys.ID] != nil)
             
-            mutableResource = mutableResource.stringByReplacingOccurrencesOfString(":id", withString: "\(parameters[Keys.ID]!)")
-            mutableParameters.removeValueForKey(Keys.ID)
+            mutableResource = mutableResource.replacingOccurrences(of: ":id", with: "\(parameters[Keys.ID]!)")
+            mutableParameters.removeValue(forKey: Keys.ID)
         }
         
         let urlString = Constants.BaseUrlSSL + mutableResource + CoreNetwork.escapedParameters(mutableParameters)
-        let url = NSURL(string: urlString)!
-        let request = NSURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        let request = URLRequest(url: url)
      
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
 
             if let error = downloadError {
-                let newError = TheMovieDB.errorForData(data, response: response, error: error)
-                completionHandler(result: nil, error: newError)
+                let newError = TheMovieDB.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, newError)
             } else {
                 
                 CoreNetwork.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
-        }
+        }) 
         
         task.resume()
         
         return task
     }
     
-    func taskForResource(resource: String, completionHandler: CompletionHander) -> NSURLSessionDataTask {
+    func taskForResource(_ resource: String, completionHandler: @escaping CompletionHander) -> URLSessionDataTask {
         
         let mutableResource = resource
         var mutableParameters = [String:AnyObject]()
         
         // Add in the API Key
-        mutableParameters["api_key"] = Constants.ApiKey
-        
+        mutableParameters["api_key"] = Constants.ApiKey as AnyObject
+       
+                
         let urlString = Constants.BaseUrlSSL + mutableResource + CoreNetwork.escapedParameters(mutableParameters)
-        let url = NSURL(string: urlString)!
-        let request = NSURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        let request = URLRequest(url: url)
         
         print(url)
         
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, downloadError in
             
             if let error = downloadError {
-                let newError = TheMovieDB.errorForData(data, response: response, error: error)
-                completionHandler(result: nil, error: newError)
+                let newError = TheMovieDB.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, newError)
             } else {
                 
                 CoreNetwork.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
-        }
+        }) 
         task.resume()
         return task
     }
@@ -90,24 +90,24 @@ class TheMovieDB : NSObject {
     
     // MARK: - All purpose task method for images
     
-    func taskForImageWithSize(size: String, filePath: String, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
+    func taskForImageWithSize(_ size: String, filePath: String, completionHandler: @escaping (_ imageData: Data?, _ error: NSError?) ->  Void) -> URLSessionTask {
         
-        let baseURL = NSURL(string: config.secureBaseImageURLString)!
-        let url = baseURL.URLByAppendingPathComponent(size)!.URLByAppendingPathComponent(filePath)
+        let baseURL = URL(string: config.secureBaseImageURLString)!
+        let url = baseURL.appendingPathComponent(size).appendingPathComponent(filePath)
         
         print(url)
         
-        let request = NSURLRequest(URL: url!)
+        let request = URLRequest(url: url)
         
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, downloadError in
             
             if let error = downloadError {
-                let newError = TheMovieDB.errorForData(data, response: response, error: error)
-                completionHandler(imageData: nil, error: newError)
+                let newError = TheMovieDB.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, newError)
             } else {
-                completionHandler(imageData: data, error: nil)
+                completionHandler(data, nil)
             }
-        }
+        }) 
         
         task.resume()
         
@@ -120,16 +120,16 @@ class TheMovieDB : NSObject {
     
     // Try to make a better error, based on the status_message from TheMovieDB. If we cant then return the previous error
 
-    class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
+    class func errorForData(_ data: Data?, response: URLResponse?, error: NSError) -> NSError {
         
         if data == nil {
             return error
         }
         
         do {
-            let parsedResult = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
+            let parsedResult = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
 
-            if let parsedResult = parsedResult as? [String : AnyObject], errorMessage = parsedResult[TheMovieDB.Keys.ErrorStatusMessage] as? String {
+            if let parsedResult = parsedResult as? [String : AnyObject], let errorMessage = parsedResult[TheMovieDB.Keys.ErrorStatusMessage] as? String {
                 let userInfo = [NSLocalizedDescriptionKey : errorMessage]
                 return NSError(domain: "TMDB Error", code: 1, userInfo: userInfo)
             }
@@ -150,23 +150,6 @@ class TheMovieDB : NSObject {
         return Singleton.sharedInstance
     }
     
-    // MARK: - Shared Date Formatter
-    
-    class var sharedDateFormatter: NSDateFormatter  {
-        
-        struct Singleton {
-            static let dateFormatter = Singleton.generateDateFormatter()
-            
-            static func generateDateFormatter() -> NSDateFormatter {
-                let formatter = NSDateFormatter()
-                formatter.dateFormat = "yyyy-M-d"
-                
-                return formatter
-            }
-        }
-        
-        return Singleton.dateFormatter
-    }
     
     // MARK: - Shared Image Cache
 
@@ -175,19 +158,19 @@ class TheMovieDB : NSObject {
     }
     
     // MARK: - Help with updating the Config
-    func updateConfig(completionHandler: (didSucceed: Bool, error: NSError?) -> Void) {
+    func updateConfig(_ completionHandler: @escaping (_ didSucceed: Bool, _ error: NSError?) -> Void) {
         
         let parameters = [String: AnyObject]()
         
         taskForResource(Resources.Config, parameters: parameters) { JSONResult, error in
             
             if let error = error {
-                completionHandler(didSucceed: false, error: error)
+                completionHandler(false, error)
             } else if let newConfig = Config(dictionary: JSONResult as! [String : AnyObject]) {
                 self.config = newConfig
-                completionHandler(didSucceed: true, error: nil)
+                completionHandler(true, nil)
             } else {
-                completionHandler(didSucceed: false, error: NSError(domain: "Config", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse config"]))
+                completionHandler(false, NSError(domain: "Config", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse config"]))
             }
         }
         
@@ -195,14 +178,3 @@ class TheMovieDB : NSObject {
 }
 
 
-//let workerContext = CoreDataStackManager.sharedInstance().coreDataStack!.newBackgroundWorkerMOC()
-//workerContext.performBlock() {
-//    TheMovieDB.sharedInstance().getGenres(TheMovieDB.Resources.MovieGenreList) { result, error in
-//        if result != nil {
-//            for (key, value) in result! {
-//                _ = Genre(id: key, name: value, context: self.mainContext() )
-//            }
-//        }
-//    }
-//    workerContext.saveContext()
-//}

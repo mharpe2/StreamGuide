@@ -15,7 +15,7 @@ class searchViewController: UIViewController { //DZNEmptyDataSetSource, DZNEmpty
     //@IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
-    var searchTask: NSURLSessionDataTask!
+    var searchTask: URLSessionDataTask!
     var guideboxResults = [GuideBoxSearchResults]()
     var searchController = UISearchController(searchResultsController: nil)
     var searchBar: UISearchBar!
@@ -68,18 +68,18 @@ class searchViewController: UIViewController { //DZNEmptyDataSetSource, DZNEmpty
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         //self.searchBar.becomeFirstResponder()
     }
     
-    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {
+    func imageForEmptyDataSet(_ scrollView: UIScrollView!) -> UIImage! {
         return UIImage(named: "filmRole")
     }
 }
 
 
 extension searchViewController: UISearchBarDelegate {
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String)  {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)  {
         
         if let task = searchTask {
             task.cancel()
@@ -95,7 +95,7 @@ extension searchViewController: UISearchBarDelegate {
         let resource = GuideBox.Resource.searchByTitle
         let parameters = ["showname": searchText]
         
-        searchTask = GuideBox.sharedInstance().taskForResource(resource, parameters: parameters) {
+        searchTask = GuideBox.sharedInstance().taskForResource(resource, parameters: parameters as [String : AnyObject]) {
             [unowned self] jsonResult, error in
             
             if let error = error {
@@ -105,7 +105,7 @@ extension searchViewController: UISearchBarDelegate {
             
             // print(jsonResult)
             
-            if let showDictionaries = jsonResult.valueForKey("results") as? [[String: AnyObject]] {
+            if let showDictionaries = jsonResult?.value(forKey: "results") as? [[String: AnyObject]] {
                 self.searchTask = nil
                 
                 // guidebox
@@ -115,14 +115,14 @@ extension searchViewController: UISearchBarDelegate {
             } // end showDictionaries
             
             // Reload the table on the main thread
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.tableView!.reloadData()
             }
             
         } // searchTask
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         //searchBar.resignFirstResponder()
     }
     
@@ -131,11 +131,11 @@ extension searchViewController: UISearchBarDelegate {
 
 extension searchViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let CellReuseId = "movieSearchResults"
         let movie = guideboxResults[indexPath.row]
         
-        if let cell = tableView.dequeueReusableCellWithIdentifier(CellReuseId)
+        if let cell = tableView.dequeueReusableCell(withIdentifier: CellReuseId)
         {
             configureCell(cell, movie: movie)
             return cell
@@ -144,11 +144,11 @@ extension searchViewController: UITableViewDelegate, UITableViewDataSource {
         return UITableViewCell()
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return guideboxResults.count
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = guideboxResults[indexPath.row]
         
         //        // Alert the delegate
@@ -158,7 +158,7 @@ extension searchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     // All right, this is kind of meager. But its nice to be consistent
-    func configureCell(cell: UITableViewCell, movie: GuideBoxSearchResults) {
+    func configureCell(_ cell: UITableViewCell, movie: GuideBoxSearchResults) {
         cell.textLabel!.text = movie.title
     }
     
@@ -166,15 +166,15 @@ extension searchViewController: UITableViewDelegate, UITableViewDataSource {
 
 
 extension searchViewController: UISearchResultsUpdating {
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         //filterContentForSearchText(searchController.searchBar.text!)
         print("updating search results")
         searchMoviesOnGuideBox(searchBar.text!)
     }
     
-    func searchMoviesOnGuideBox(searchText: String) {
+    func searchMoviesOnGuideBox(_ searchText: String) {
         
-        let trimmedSearchText = searchText.stringByReplacingOccurrencesOfString(" ", withString: "")
+        let trimmedSearchText = searchText.replacingOccurrences(of: " ", with: "")
         
         if let task = searchTask {
             task.cancel()
@@ -190,7 +190,7 @@ extension searchViewController: UISearchResultsUpdating {
         let resource = GuideBox.Resource.searchByTitle
         let parameters = ["showname": trimmedSearchText]
         
-        searchTask = GuideBox.sharedInstance().taskForResource(resource, parameters: parameters) {
+        searchTask = GuideBox.sharedInstance().taskForResource(resource, parameters: parameters as [String : AnyObject]) {
             [unowned self] jsonResult, error in
             
             if let error = error {
@@ -200,7 +200,7 @@ extension searchViewController: UISearchResultsUpdating {
             
             // print(jsonResult)
             
-            if let showDictionaries = jsonResult.valueForKey("results") as? [[String: AnyObject]] {
+            if let showDictionaries = jsonResult?.value(forKey: "results") as? [[String: AnyObject]] {
                 self.searchTask = nil
                 
                 // guidebox
@@ -210,7 +210,7 @@ extension searchViewController: UISearchResultsUpdating {
             } // end showDictionaries
             
             // Reload the table on the main thread
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.tableView!.reloadData()
             }
             

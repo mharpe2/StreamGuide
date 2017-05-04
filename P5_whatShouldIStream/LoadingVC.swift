@@ -13,38 +13,14 @@ import ChameleonFramework
 
 class LoadingVC: UIViewController {
 
-   let log = XCGLogger.defaultInstance()
-    @IBOutlet weak var loadingView: NVActivityIndicatorView!
+      @IBOutlet weak var loadingView: NVActivityIndicatorView!
     
     var myView: NVActivityIndicatorView!
     var frame = CGRect()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        log.info("** LoadingVC running")
-//        
-//        frame = CGRectMake(self.view.center.x, self.view.center.y, 125.0, 125.0)
-//        myView = NVActivityIndicatorView(frame: frame, type: NVActivityIndicatorType.Pacman) //type: NVActivityIndicatorType.Pacman)
-//        
-//        let label = UILabel(frame: frame)
-//        label.text = "Loading"
-//        label.sizeToFit()
-//        label.textColor = UIColor.whiteColor()
-//        label.center.x = self.view.center.x
-//        label.center.y = self.view.center.y
-//        
-//        
-//        self.view.addSubview(label)
-//        self.view.addSubview(myView)
-//        loadingView.startAnimating()
-//        
-//        
-//               
-//        // Do any additional setup after loading the view.
-//        
-//        
-//        print("is the backround changed??")
+
     }
 
     override func didReceiveMemoryWarning() {

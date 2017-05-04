@@ -1,30 +1,54 @@
 PODS:
+  - AWSCognito (2.5.5):
+    - AWSCore (= 2.5.5)
+  - AWSCognitoIdentityProvider (2.5.5):
+    - AWSCore (= 2.5.5)
+  - AWSCore (2.5.5)
+  - AWSS3 (2.5.5):
+    - AWSCore (= 2.5.5)
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
-  - NVActivityIndicatorView (2.12)
-  - ReachabilitySwift (2.4)
+  - NVActivityIndicatorView (3.6.1)
+  - ObjcExceptionBridging (1.0.1):
+    - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
+  - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
+  - ReachabilitySwift (3)
+  - XCGLogger (5.0.1):
+    - XCGLogger/Core (= 5.0.1)
+  - XCGLogger/Core (5.0.1):
+    - ObjcExceptionBridging
 
 DEPENDENCIES:
-  - ChameleonFramework/Swift (~> 2.1)
-  - NVActivityIndicatorView (from `https://github.com/ninjaprox/NVActivityIndicatorView.git`, branch `swift2.3`)
-  - ReachabilitySwift (~> 2.4)
+  - AWSCognito
+  - AWSCognitoIdentityProvider
+  - AWSCore
+  - AWSS3
+  - ChameleonFramework/Swift (from `https://github.com/ViccAlexander/Chameleon.git`)
+  - NVActivityIndicatorView
+  - ReachabilitySwift
+  - XCGLogger
 
 EXTERNAL SOURCES:
-  NVActivityIndicatorView:
-    :branch: swift2.3
-    :git: https://github.com/ninjaprox/NVActivityIndicatorView.git
+  ChameleonFramework:
+    :git: https://github.com/ViccAlexander/Chameleon.git
 
 CHECKOUT OPTIONS:
-  NVActivityIndicatorView:
-    :commit: ac4325492550b9ec9516e3a9b6e28b2c07faa1c6
-    :git: https://github.com/ninjaprox/NVActivityIndicatorView.git
+  ChameleonFramework:
+    :commit: acc480fbe023c6e5fe40f68593f4a70a8c4c7ad5
+    :git: https://github.com/ViccAlexander/Chameleon.git
 
 SPEC CHECKSUMS:
+  AWSCognito: 5f1dddb8669682b1224c19c214270a942e438b06
+  AWSCognitoIdentityProvider: 673bda0bc0f77cd1e2b0ab3c02095bc0b69b7603
+  AWSCore: 665371d51ccdfe62430c586e3cb8e57eff8ce09d
+  AWSS3: 7a910824991e5dc13971f7ae73230d354666880e
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
-  NVActivityIndicatorView: de8be03826726ad99cdfacf7fe09e88cbfeef911
-  ReachabilitySwift: dc7452dab85ff881904215e1a113326ad8d07beb
+  NVActivityIndicatorView: 9f52a7f84bf5c6a798722c450fe3c198e01c56ed
+  ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
+  ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
+  XCGLogger: 0b43697155d41e4a1b15fc776f319c2141646b09
 
-PODFILE CHECKSUM: 95e60d69b358d9fe87667bf6e509ee2e0533fa05
+PODFILE CHECKSUM: 3a05b777bc888b750540c18d8f9591b525dd62f5
 
-COCOAPODS: 1.1.0.beta.1
+COCOAPODS: 1.2.0.beta.3

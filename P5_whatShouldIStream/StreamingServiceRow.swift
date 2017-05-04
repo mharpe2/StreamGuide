@@ -7,25 +7,22 @@
 //
 
 import UIKit
-//import BNRCoreDataStack
 import CoreData
 
 
 class StreamingServiceRow: UITableViewCell
 {
-    @IBOutlet weak var collectionView: UICollectionView!
+    
+  
+    @IBOutlet var collectionView: UICollectionView!
+
 }
 
 //MARK: Delegate 
 
 extension StreamingServiceRow {
     
-    func setCollectionViewDataSourceDelegate<D: protocol<UICollectionViewDataSource, UICollectionViewDelegate>>(dataSourceDelegate: D, forRow row: Int) {
-        
-        if collectionView == nil {
-            print("Error - CollectionView = nil")
-            return
-        }
+    func setCollectionViewDataSourceDelegate<D: UICollectionViewDataSource & UICollectionViewDelegate>(_ dataSourceDelegate: D, forRow row: Int) {
         
         collectionView.delegate = dataSourceDelegate
         collectionView.dataSource = dataSourceDelegate
@@ -36,21 +33,17 @@ extension StreamingServiceRow {
     
     var collectionViewOffset: CGFloat {
         set {
-            if collectionView != nil {
-                collectionView.contentOffset.x = newValue
-            }
+                            collectionView.contentOffset.x = newValue
+            
         }
         
         get {
-            if collectionView != nil {
-                return collectionView.contentOffset.x
-            } else {
-                return 1
+                           return collectionView.contentOffset.x
             }
         }
     }
     
-}
+
 
 //MARK: flowDelegate
 

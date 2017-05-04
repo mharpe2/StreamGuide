@@ -7,14 +7,11 @@
 //
 
 import UIKit
-//import BNRCoreDataStack
 import CoreData
 
 class WatchListViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    
-    let log = XCGLogger.defaultInstance()
     
     lazy var mainContext = {
         return CoreDataStackManager.sharedInstance().coreDataStack!.mainQueueContext
@@ -64,7 +61,7 @@ class WatchListViewController: UIViewController {
 
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         //tableView.reloadData()
     }
@@ -79,28 +76,28 @@ class WatchListViewController: UIViewController {
 
 extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         /* Get cell type */
         let cellReuseIdentifier = "MovieTableViewCell"
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier) as! MovieTableViewCell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! MovieTableViewCell!
         
         //get a moive array from BNR core data
         guard let sections = fetchedResultsController.sections else {
             assertionFailure("No Sections in fetched results")
-            return cell
+            return cell!
         }
         
         let section = sections[indexPath.section]
         let movie = section.objects[indexPath.row]
         
                /* Set cell defaults */
-        cell.picture!.image = UIImage(named: "filmRole")
+        cell?.picture!.image = UIImage(named: "filmRole")
         cell.title!.text = movie.title
         cell.overView.text = movie.overview
         //cell.picture!.contentMode = UIViewContentMode.ScaleAspectFit
         
-        cell.activityIndicator.startAnimating()
+        cell?.activityIndicator.startAnimating()
         if let posterPath = movie.posterPath {
             TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.RowPoster, filePath: posterPath, completionHandler: { (imageData, error) in
                 if let image = UIImage(data: imageData!) {
@@ -113,16 +110,16 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
                 cell.activityIndicator.stopAnimating()
             })
         }
-        return cell
+        return cell!
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //print("numberOfRows: \(fetchedResultsController.sections?[section].objects.count ?? 0)")
         return fetchedResultsController.sections?[section].objects.count ?? 0
         
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         
         //get a moive array from BNR core data
@@ -134,7 +131,7 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
         let section = sections[indexPath.section]
         let movie = section.objects[indexPath.row]
         
-        let movieDetailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("MovieDetailViewController") as! MovieDetailViewController
+        let movieDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "MovieDetailViewController") as! MovieDetailViewController
         
         movieDetailViewController.movie = movie
         
@@ -146,7 +143,7 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
 
     }
     
-    func getMovieFromFRC(indexPath: NSIndexPath) -> Movie? {
+    func getMovieFromFRC(_ indexPath: IndexPath) -> Movie? {
         //get a moive array from BNR core data
         guard let sections = fetchedResultsController.sections else {
             assertionFailure("No Sections in fetched results")
@@ -160,22 +157,22 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
     }
     
     //MARK: Delete tableview cell
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
-        if editingStyle == .Delete {
+        if editingStyle == .delete {
             if let movieToDelete = getMovieFromFRC(indexPath) {
-                movieToDelete.onWatchlist = NSNumber(bool: false)
+                movieToDelete.onWatchlist = NSNumber(value: false as Bool)
                 mainContext().saveContext()
             }
             //confirmDelete(movieToDelete)
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
 

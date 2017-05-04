@@ -11,33 +11,55 @@ import UIKit
 class awesomeMovieDetailViewController: UIViewController {
 
     @IBOutlet weak var backroundImage: UIImageView!
-    @IBOutlet weak var movieTitle: UILabel!
-    
+    //@IBOutlet weak var movieTitle: UILabel!
+    @IBOutlet weak var overView: UITextView!
+    @IBOutlet weak var overViewHeightConstraint: NSLayoutConstraint!
     var movie: Movie!
-    let log = XCGLogger.defaultInstance()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+       // movieTitle.text = movie.title
+        overView.text = movie.overview
+        //sizeThatFits:CGSizeMake(textView.frame.size.width, CGFLOAT_MAX)].height
+        let size = overView.sizeThatFits( CGSize(width: overView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
+        overView.contentSize.height = size.height
+        overView.sizeToFit()
+               
+        
         if let posterPath = movie.posterPath {
             
             if let savedImage = movie.largelPosterImage {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.backroundImage.image = savedImage
                 }
             } else {
                 TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.originalPoster, filePath: posterPath, completionHandler: { (imageData, error) in
-                    if let image = UIImage(data: imageData! as NSData) {
-                        dispatch_async(dispatch_get_main_queue()) {
+                    if let image = UIImage(data: imageData! as Data) {
+                        DispatchQueue.main.async {
                             self.backroundImage.image = image
                             self.movie.largelPosterImage = image
                             
                         }
                     } else {
-                        self.log.error("could not download image for \(self.movie.title)")
+                        log.error("could not download image for \(self.movie.title)")
                     }
                 }) // end tmbd closure
             }
+        }
+        
+        //Download trailer array
+        
+        TheMovieDB.sharedInstance().getVideos(movie.id!) {
+            results, error in
+            if error != nil {
+                log.error("error")
+            }
+            
+            else {
+                print("\(results)")
+            }
+            
         }
  
         
@@ -49,14 +71,18 @@ class awesomeMovieDetailViewController: UIViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    @IBAction func tapRecognizer(_ sender: UITapGestureRecognizer) {
+        
+         log.info("tap gesture")
     }
-    */
-
+  
+    
+    @IBAction func panGestureRecogizer(_ sender: UIPanGestureRecognizer) {
+         log.info("pan gesture")
+        self.dismiss(animated: true) {
+            // code
+        }
+    }
+    
 }

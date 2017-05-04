@@ -11,60 +11,60 @@ import Foundation
 
 class GuideBox: NSObject {
     
-    typealias CompletionHander = (result: AnyObject!, error: NSError?) -> Void
+    typealias CompletionHander = (_ result: AnyObject?, _ error: NSError?) -> Void
     
-    var session: NSURLSession
+    var session: URLSession
     
     //var config = Config.unarchivedInstance() ?? Config()
     
     override init() {
-        session = NSURLSession.sharedSession()
+        session = URLSession.shared
         super.init()
     }
     
     
     // MARK: - All purpose task method for data
     
-    func taskForResource(resource: String, parameters: [String : AnyObject], completionHandler: CompletionHander) -> NSURLSessionDataTask {
+    func taskForResource(_ resource: String, parameters: [String : AnyObject], completionHandler: @escaping CompletionHander) -> URLSessionDataTask {
         
         var mutableParameters = parameters
         var mutableResource = resource
         
                 
         // Substitute the id parameter into the resource
-        if resource.rangeOfString(":id") != nil {
+        if resource.range(of: ":id") != nil {
             //assert(parameters[Keys.ID] != nil)
             
-            mutableResource = mutableResource.stringByReplacingOccurrencesOfString(":id", withString: "\(parameters[Keys.ID]!)")
-            mutableParameters.removeValueForKey(Keys.ID)
+            mutableResource = mutableResource.replacingOccurrences(of: ":id", with: "\(parameters[Keys.ID]!)")
+            mutableParameters.removeValue(forKey: Keys.ID)
         }
         
         
         // Substitute the id parameter into the resource
-        if resource.rangeOfString(":showname") != nil {
+        if resource.range(of: ":showname") != nil {
             //assert(parameters[":showname"] != nil)
             
-            mutableResource = mutableResource.stringByReplacingOccurrencesOfString(":showname", withString: "\(parameters["showname"]!)")
-            mutableParameters.removeValueForKey(":showname")
+            mutableResource = mutableResource.replacingOccurrences(of: ":showname", with: "\(parameters["showname"]!)")
+            mutableParameters.removeValue(forKey: ":showname")
         }
 
         
         let urlString = Constants.BaseUrlSSL + mutableResource + CoreNetwork.escapedParameters(mutableParameters)
-        let url = NSURL(string: urlString)!
-        let request = NSURLRequest(URL: url)
+        let url = URL(string: urlString)!
+        let request = URLRequest(url: url)
         
         print(url)
         
-        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
             
             if let error = downloadError {
-                let newError = GuideBox.errorForData(data, response: response, error: error)
-                completionHandler(result: nil, error: newError)
+                let newError = GuideBox.errorForData(data, response: response, error: error as NSError)
+                completionHandler(nil, newError)
             } else {
                 
                 CoreNetwork.parseJSONWithCompletionHandler(data!, completionHandler: completionHandler)
             }
-        }
+        }) 
         
         task.resume()
         
@@ -80,7 +80,7 @@ class GuideBox: NSObject {
 //        
 //        print(url)
 //        
-//        let request = NSURLRequest(URL: url)
+//        let request = URLRequest(URL: url)
 //        
 //        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
 //            
@@ -103,16 +103,16 @@ class GuideBox: NSObject {
     
     // Try to make a better error, based on the status_message from TheMovieDB. If we cant then return the previous error
     
-    class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError) -> NSError {
+    class func errorForData(_ data: Data?, response: URLResponse?, error: NSError) -> NSError {
         
         if data == nil {
             return error
         }
         
         do {
-            let parsedResult = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
+            let parsedResult = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
             
-            if let parsedResult = parsedResult as? [String : AnyObject], errorMessage = parsedResult[GuideBox.Keys.ErrorStatusMessage] as? String {
+            if let parsedResult = parsedResult as? [String : AnyObject], let errorMessage = parsedResult[GuideBox.Keys.ErrorStatusMessage] as? String {
                 let userInfo = [NSLocalizedDescriptionKey : errorMessage]
                 return NSError(domain: "GuideBox Error", code: 1, userInfo: userInfo)
             }

@@ -10,8 +10,8 @@ import UIKit
 
 class MovieDetailViewController: UITableViewController {
     
-    private let kTableviewHeaderHeight: CGFloat = 280.0
-    private let kTableHeaderCutAway: CGFloat = 0
+    fileprivate let kTableviewHeaderHeight: CGFloat = 280.0
+    fileprivate let kTableHeaderCutAway: CGFloat = 0
     
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var addButton: UIButton!
@@ -23,7 +23,7 @@ class MovieDetailViewController: UITableViewController {
     var movie: Movie?
     
     var navItem = UINavigationItem()
-    var backItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: nil, action: #selector(buttonPressed))
+    var backItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: nil, action: #selector(buttonPressed))
 
     //    let titleItem = UINavigationItem()
     //    var tmdbRating: UILabel?
@@ -56,7 +56,7 @@ class MovieDetailViewController: UITableViewController {
         
         // table header mask layer
         headerMaskLayer = CAShapeLayer()
-        headerMaskLayer.fillColor = UIColor.blackColor().CGColor
+        headerMaskLayer.fillColor = UIColor.black.cgColor
         headerView.layer.mask = headerMaskLayer
         updateHeaderView()
 
@@ -106,7 +106,7 @@ class MovieDetailViewController: UITableViewController {
             if let posterPath = movie!.posterPath {
                 TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.DetailPoster, filePath: posterPath, completionHandler: { (imageData, error) in
                     if let image = UIImage(data: imageData!) {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             self.posterImage.image! = image
                         }
                     } else {
@@ -117,7 +117,7 @@ class MovieDetailViewController: UITableViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
     }
     
@@ -125,8 +125,8 @@ class MovieDetailViewController: UITableViewController {
 //        dismissViewControllerAnimated(true, completion: nil)
 //    }
     
-    func buttonPressed(sender: AnyObject) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func buttonPressed(_ sender: AnyObject) {
+        dismiss(animated: true, completion: nil)
     }
     
     func updateHeaderView() {
@@ -138,56 +138,56 @@ class MovieDetailViewController: UITableViewController {
         headerView.frame = headerRect
         
         let path = UIBezierPath()
-        path.moveToPoint(CGPoint(x: 0, y: 0))
-        path.addLineToPoint(CGPoint(x: headerRect.width, y: 0))
-        path.addLineToPoint(CGPoint(x: headerRect.width, y: headerRect.height))
-        path.addLineToPoint(CGPoint(x: 0, y: headerRect.height - kTableHeaderCutAway))
-        headerMaskLayer?.path = path.CGPath
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: headerRect.width, y: 0))
+        path.addLine(to: CGPoint(x: headerRect.width, y: headerRect.height))
+        path.addLine(to: CGPoint(x: 0, y: headerRect.height - kTableHeaderCutAway))
+        headerMaskLayer?.path = path.cgPath
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MovieDetailCell") as! MovieDetailCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieDetailCell") as! MovieDetailCell
         cell.overview.text = movie?.overview
         cell.overview.numberOfLines = 0
         cell.overview.sizeToFit()
         
         
-        let formater = NSNumberFormatter()
+        let formater = NumberFormatter()
         formater.maximumFractionDigits = 1
         if let rating = movie?.voteAverage {
-            if let vote = formater.stringFromNumber(rating) {
+            if let vote = formater.string(from: rating) {
                 cell.rating!.text = "TMDB Rating: \(vote)"
             }
         }
         return cell
     }
     
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateHeaderView()
     }
 
     // MARK: - UITableViewDelegate
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     
-    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
 
-    @IBAction func addToWatchList(sender: AnyObject) {
+    @IBAction func addToWatchList(_ sender: AnyObject) {
         if let favoriteMovie = movie {
             print("add to Favorites")
-            favoriteMovie.onWatchlist = NSNumber(bool: true)
+            favoriteMovie.onWatchlist = NSNumber(value: true as Bool)
             CoreDataStackManager.sharedInstance().coreDataStack!.mainQueueContext.saveContext()
         }
     }
