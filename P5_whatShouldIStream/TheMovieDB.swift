@@ -9,9 +9,9 @@ import Foundation
 
 class TheMovieDB : NSObject {
     
-    typealias CompletionHander = (_ result: AnyObject?, _ error: NSError?) -> Void
+    typealias CompletionHander = (_ result: Any?, _ error: NSError?) -> Void
     
-    var session: URLSession
+    var session: URLSession!
     
     var config = Config.unarchivedInstance() ?? Config()
     
@@ -42,7 +42,7 @@ class TheMovieDB : NSObject {
         let url = URL(string: urlString)!
         let request = URLRequest(url: url)
      
-        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, downloadError in
 
             if let error = downloadError {
                 let newError = TheMovieDB.errorForData(data, response: response, error: error as NSError)
@@ -162,7 +162,7 @@ class TheMovieDB : NSObject {
         
         let parameters = [String: AnyObject]()
         
-        taskForResource(Resources.Config, parameters: parameters) { JSONResult, error in
+        _ = taskForResource(Resources.Config, parameters: parameters) { JSONResult, error in
             
             if let error = error {
                 completionHandler(false, error)

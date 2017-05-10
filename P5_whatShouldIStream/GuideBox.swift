@@ -11,7 +11,7 @@ import Foundation
 
 class GuideBox: NSObject {
     
-    typealias CompletionHander = (_ result: AnyObject?, _ error: NSError?) -> Void
+    typealias CompletionHander = (_ result: Any?, _ error: NSError?) -> Void
     
     var session: URLSession
     
@@ -71,34 +71,6 @@ class GuideBox: NSObject {
         return task
     }
     
-//    // MARK: - All purpose task method for images
-//    
-//    func taskForImageWithSize(size: String, filePath: String, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
-//        
-//        let baseURL = NSURL(string: config.secureBaseImageURLString)!
-//        let url = baseURL.URLByAppendingPathComponent(size).URLByAppendingPathComponent(filePath)
-//        
-//        print(url)
-//        
-//        let request = URLRequest(URL: url)
-//        
-//        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
-//            
-//            if let error = downloadError {
-//                let newError = GuideBox.errorForData(data, response: response, error: error)
-//                completionHandler(imageData: nil, error: newError)
-//            } else {
-//                completionHandler(imageData: data, error: nil)
-//            }
-//        }
-//        
-//        task.resume()
-//        
-//        return task
-//    }
-    
-    
-    // MARK: - Helpers
     
     
     // Try to make a better error, based on the status_message from TheMovieDB. If we cant then return the previous error

@@ -12,8 +12,8 @@ import CoreData
 
 extension Genre {
 
-    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
-        return NSFetchRequest(entityName: "Genre");
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Genre> {
+        return NSFetchRequest<Genre>(entityName: "Genre");
     }
 
     @NSManaged public var id: NSNumber?

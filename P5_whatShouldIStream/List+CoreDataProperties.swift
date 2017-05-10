@@ -12,8 +12,8 @@ import CoreData
 
 extension List {
 
-    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
-        return NSFetchRequest(entityName: "List");
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<List> {
+        return NSFetchRequest<List>(entityName: "List");
     }
 
     @NSManaged public var date: Date?

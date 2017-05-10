@@ -12,8 +12,8 @@ import CoreData
 
 extension Person {
 
-    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
-        return NSFetchRequest(entityName: "Person");
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Person> {
+        return NSFetchRequest<Person>(entityName: "Person");
     }
 
     @NSManaged public var id: NSNumber?

@@ -12,8 +12,8 @@ import CoreData
 
 extension Movie {
 
-    @nonobjc open override class func fetchRequest() -> NSFetchRequest<NSFetchRequestResult> {
-        return NSFetchRequest(entityName: "Movie");
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Movie> {
+        return NSFetchRequest<Movie>(entityName: "Movie");
     }
 
     @NSManaged public var guideBoxId: NSNumber?

@@ -9,56 +9,38 @@
 import UIKit
 import CoreData
 
-class WatchListViewController: UIViewController {
+class WatchListViewController: UIViewController, NSFetchedResultsControllerDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
-    lazy var mainContext = {
-        return CoreDataStackManager.sharedInstance().coreDataStack!.mainQueueContext
-    }
+    var fetchedResultsController: NSFetchedResultsController<Movie>!
     
-    // fetchedResultsController
-    lazy var fetchedResultsController: FetchedResultsController<Movie> = {
-        
-        let fetchRequest = NSFetchRequest(entityName: Movie.entityName)
-        fetchRequest.predicate = NSPredicate(format: "onWatchlist == %@", true)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        fetchRequest.sortDescriptors = []
-        
-        //Create fetched results controller with the new fetch request.
-        var fetchedResultsController = FetchedResultsController<Movie>(fetchRequest: fetchRequest,
-                                                                       managedObjectContext: self.mainContext(),
-                                                                       sectionNameKeyPath: nil,
-                                                                       cacheName: nil)
-        return fetchedResultsController
-    }()
-    
-    lazy var frcDelegate: MoviesFetchedResultsTableViewControllerDelegate = {
-        return MoviesFetchedResultsTableViewControllerDelegate(tableView: self.tableView )
-    }()
+//    // fetchedResultsController
+//    lazy var fetchedResultsController: FetchedResultsController<Movie> = {
+//        
+//        let fetchRequest = NSFetchRequest(entityName: Movie.entityName)
+//        fetchRequest.predicate = NSPredicate(format: "onWatchlist == %@", true)
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//        fetchRequest.sortDescriptors = []
+//        
+//        //Create fetched results controller with the new fetch request.
+//        var fetchedResultsController = FetchedResultsController<Movie>(fetchRequest: fetchRequest,
+//                                                                       managedObjectContext: self.mainContext(),
+//                                                                       sectionNameKeyPath: nil,
+//                                                                       cacheName: nil)
+//        return fetchedResultsController
+//    }()
+//    
+//    lazy var frcDelegate: MoviesFetchedResultsTableViewControllerDelegate = {
+//        return MoviesFetchedResultsTableViewControllerDelegate(tableView: self.tableView )
+//    }()
 
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.fetchedResultsController.setDelegate(self.frcDelegate)
-
-       
-        // perform fetch
-        do {
-            try self.fetchedResultsController.performFetch()
-        } catch let error as NSError {
-            log.error("\(error.localizedDescription)"  )
-        }
-        if self.fetchedResultsController.fetchedObjects?.count == 0{
-           log.info("no watchlist movies found")
-        } else {
-            log.info("watchlist movies found")
-        }
-
+        attemptFetch()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -89,25 +71,25 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
         }
         
         let section = sections[indexPath.section]
-        let movie = section.objects[indexPath.row]
+        let movie = section.objects?[indexPath.row] as? Movie
         
                /* Set cell defaults */
         cell?.picture!.image = UIImage(named: "filmRole")
-        cell.title!.text = movie.title
-        cell.overView.text = movie.overview
+        cell?.title!.text = movie?.title
+        cell?.overView.text = movie?.overview
         //cell.picture!.contentMode = UIViewContentMode.ScaleAspectFit
         
         cell?.activityIndicator.startAnimating()
-        if let posterPath = movie.posterPath {
-            TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.RowPoster, filePath: posterPath, completionHandler: { (imageData, error) in
+        if let posterPath = movie?.posterPath {
+            _ = TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.RowPoster, filePath: posterPath, completionHandler: { (imageData, error) in
                 if let image = UIImage(data: imageData!) {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        cell.picture!.image = image
+                   performUIUpdatesOnMain() {
+                        cell?.picture!.image = image
                     }
                 } else {
-                    print(error)
+                   log.error()
                 }
-                cell.activityIndicator.stopAnimating()
+                cell?.activityIndicator.stopAnimating()
             })
         }
         return cell!
@@ -115,7 +97,7 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //print("numberOfRows: \(fetchedResultsController.sections?[section].objects.count ?? 0)")
-        return fetchedResultsController.sections?[section].objects.count ?? 0
+        return fetchedResultsController.sections?[section].objects!.count ?? 0
         
     }
     
@@ -129,7 +111,7 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
         }
         
         let section = sections[indexPath.section]
-        let movie = section.objects[indexPath.row]
+        let movie = section.objects?[indexPath.row] as? Movie
         
         let movieDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "MovieDetailViewController") as! MovieDetailViewController
         
@@ -151,7 +133,8 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
         }
         
         let section = sections[indexPath.section]
-        let movie = section.objects[indexPath.row]
+        let movie = section.objects?[indexPath.row] as? Movie
+
         return movie
         
     }
@@ -166,7 +149,7 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
         if editingStyle == .delete {
             if let movieToDelete = getMovieFromFRC(indexPath) {
                 movieToDelete.onWatchlist = NSNumber(value: false as Bool)
-                mainContext().saveContext()
+                coreDataStack.saveContext()
             }
             //confirmDelete(movieToDelete)
         }
@@ -175,7 +158,49 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource  {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
-
     
+    func attemptFetch() {
+        
+        let fetchRequest: NSFetchRequest<Movie> = Movie.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "onWatchlist == %@", NSNumber.init(booleanLiteral: true))
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        fetchedResultsController.delegate = self
+        self.fetchedResultsController = fetchedResultsController
+        
+        do {
+            try fetchedResultsController.performFetch()
+            
+        } catch {
+            
+            let error = error as NSError
+            print("\(error)")
+            
+        }
+    }
 }
+
+//    // fetchedResultsController
+//    lazy var fetchedResultsController: FetchedResultsController<Movie> = {
+//
+//        let fetchRequest = NSFetchRequest(entityName: Movie.entityName)
+//        fetchRequest.predicate = NSPredicate(format: "onWatchlist == %@", true)
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//        fetchRequest.sortDescriptors = []
+//
+//        //Create fetched results controller with the new fetch request.
+//        var fetchedResultsController = FetchedResultsController<Movie>(fetchRequest: fetchRequest,
+//                                                                       managedObjectContext: self.mainContext(),
+//                                                                       sectionNameKeyPath: nil,
+//                                                                       cacheName: nil)
+//        return fetchedResultsController
+//    }()
+//
+//    lazy var frcDelegate: MoviesFetchedResultsTableViewControllerDelegate = {
+//        return MoviesFetchedResultsTableViewControllerDelegate(tableView: self.tableView )
+//    }()
+
+
 

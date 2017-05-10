@@ -14,7 +14,9 @@ import XCGLogger
 let log = XCGLogger.default
 
 //Global Context
-let context = CoreDataStack().persistentContainer.viewContext
+let coreDataStack = CoreDataStack()
+let context = coreDataStack.persistentContainer.viewContext
+
 
 
 

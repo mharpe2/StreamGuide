@@ -1,11 +1,11 @@
 PODS:
-  - AWSCognito (2.5.5):
-    - AWSCore (= 2.5.5)
-  - AWSCognitoIdentityProvider (2.5.5):
-    - AWSCore (= 2.5.5)
-  - AWSCore (2.5.5)
-  - AWSS3 (2.5.5):
-    - AWSCore (= 2.5.5)
+  - AWSCognito (2.5.6):
+    - AWSCore (= 2.5.6)
+  - AWSCognitoIdentityProvider (2.5.6):
+    - AWSCore (= 2.5.6)
+  - AWSCore (2.5.6)
+  - AWSS3 (2.5.6):
+    - AWSCore (= 2.5.6)
   - ChameleonFramework/Default (2.1.0)
   - ChameleonFramework/Swift (2.1.0):
     - ChameleonFramework/Default
@@ -39,10 +39,10 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ViccAlexander/Chameleon.git
 
 SPEC CHECKSUMS:
-  AWSCognito: 5f1dddb8669682b1224c19c214270a942e438b06
-  AWSCognitoIdentityProvider: 673bda0bc0f77cd1e2b0ab3c02095bc0b69b7603
-  AWSCore: 665371d51ccdfe62430c586e3cb8e57eff8ce09d
-  AWSS3: 7a910824991e5dc13971f7ae73230d354666880e
+  AWSCognito: 18edcf80780d45229371dc954c77c825c617f9c4
+  AWSCognitoIdentityProvider: 44b0e11aea801bb7dbe810a7f2cf21374d8e225b
+  AWSCore: 47109d026cdbc1272624caa73114fbdd2ba3ad66
+  AWSS3: 5ba117abcbf766c4ec405b255c51dbf8bbc588ce
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
   NVActivityIndicatorView: 9f52a7f84bf5c6a798722c450fe3c198e01c56ed
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001

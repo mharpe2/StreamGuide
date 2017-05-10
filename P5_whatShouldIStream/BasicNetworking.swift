@@ -15,7 +15,7 @@ import AWSCognito
 
 class CoreNetwork {
 
-    typealias CompletionHander = (_ result: AnyObject?, _ error: NSError?) -> Void
+    typealias CompletionHander = (_ result: Any?, _ error: NSError?) -> Void
 
     // AWS-S3 constants
     let bucket = "wsis-contentdelivery-mobilehub-326483023"
@@ -36,7 +36,7 @@ class CoreNetwork {
     class func getJsonFromHttp(_ location: String, completionHandler: @escaping CompletionHander) {
         
         let requestURL: URL = URL(string: location)!
-        let urlRequest:URLRequest =URLRequest(url: requestURL)
+        let urlRequest:URLRequest = URLRequest(url: requestURL)
         let session = URLSession.shared
         
         let task = session.dataTask(with: urlRequest, completionHandler: {
@@ -50,12 +50,12 @@ class CoreNetwork {
                     (result, error) in
                     
                     if error == nil {
-                        completionHandler(result: result, error: nil)
-                        print(result)
+                        completionHandler(result, nil)
+                       
                     }
                     else {
-                        print("error occured \(error?.localizedDescription)")
-                        completionHandler(result: nil, error: error)
+                       log.error()
+                        completionHandler(nil, error)
                     }
                 }
             }
@@ -86,13 +86,13 @@ class CoreNetwork {
         if fileManager.fileExists(atPath: masterFilePath) {
             let fileAttributes = try? fileManager.attributesOfItem(atPath: masterFilePath)
             let creationDate = fileAttributes?[FileAttributeKey.creationDate]
-            print("file created: \(creationDate)")
+            log.info("file created: \(String(describing: creationDate))")
             
             //check metadata of AWS file before we download it
             let headRequest = AWSS3HeadObjectRequest()
             headRequest?.bucket = bucket
             headRequest?.key = key
-            print("last modified \(headRequest?.ifModifiedSince = Date() )")
+            log.info("last modified \(String(describing: headRequest?.ifModifiedSince = Date() ))")
             
             // if file exists but has no creation date, it must be corrupted?
             // Delete it I suppose
@@ -111,20 +111,22 @@ class CoreNetwork {
         //request.downloadingFileURL
         request?.bucket = bucket
         request?.key = key
-        request?.downloadingFileURL = downloadingFileURL.URLByAppendingPathComponent(request.key!)
+       
+        request?.downloadingFileURL = downloadingFileURL.appendingPathComponent((request?.key!)!)
         
         // Submit the download request
         let transferManager = AWSS3TransferManager.default()
-        print("Starting Download of \(request?.key)")
+        log.info("Starting Download of \(String(describing: request?.key))")
         
         
         //var downloadOutput: AWSS3TransferManagerDownloadOutput
         //transferManager.download(request).cont
         transferManager.download(request!).continueWith(executor: AWSExecutor.mainThread(), block: {(task: AWSTask) -> AnyObject? in
-            if let error = task.error  {
-                 if error.domain == AWSS3TransferManagerErrorDomain, let code = AWSS3TransferManagerErrorType(rawValue: error.code) {
+            if let error = task.error as NSError? {
+                
+                if error.domain == AWSS3TransferManagerErrorDomain, let code = AWSS3TransferManagerErrorType(rawValue: error.code) {
                     switch code {
-                    case .Cancelled, .Paused:
+                    case .cancelled, .paused:
                         break
                     default:
                         print("Error downloading: \(key) Error: \(error)")
@@ -186,25 +188,48 @@ class CoreNetwork {
 //    })
 
     
-    class func parseJSONWithCompletionHandler(_ data: Data, completionHandler: CompletionHander) {
-        var parsingError: NSError? = nil
+//    class func parseJSONWithCompletionHandler(_ data: Data, completionHandler: CompletionHander) {
+//        var parsingError: NSError? = nil
+//        
+//        let parsedResult: AnyObject?
+//        do {
+//            parsedResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+//        } catch let error as NSError {
+//            parsingError = error
+//            parsedResult = nil
+//        }
+//        
+//        if let error = parsingError {
+//            completionHandler(nil, error)
+//        } else {
+//            
+//            completionHandler(parsedResult, nil)
+//        }
+//    }
+    
+    
+    class func parseJSONWithCompletionHandler(_ data: Data, completionHandler: (_ result: Any?, _ error: NSError?) -> Void) {
         
-        let parsedResult: AnyObject?
+        var parsedResult: Any? = nil
+        
         do {
             parsedResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+            
         } catch let error as NSError {
-            parsingError = error
-            parsedResult = nil
+            completionHandler(nil, error)
+            return
+            
+        } catch {
+            completionHandler( nil, NSError(domain: "parseJSONWithCompletionHandler", code: 0,
+                                            userInfo: [NSLocalizedDescriptionKey : "Error: msg not found in parsed resut"])
+            )
+            return
         }
         
-        if let error = parsingError {
-            completionHandler(nil, error)
-        } else {
-            
-            completionHandler(parsedResult, nil)
-        }
+        completionHandler(parsedResult, nil)
+        
     }
-    
+
     class func errorForData(_ data: Data?, response: URLResponse?, error: NSError, errorMsg: String) -> NSError {
         
         if data == nil {
@@ -292,7 +317,7 @@ class CoreNetwork {
 
                 var jsonData = Data()
                 do {
-                jsonData = try Data(contentsOfFile: result.downloadingFileURL.path,  options: NSData.ReadingOptions.DataReadingMappedIfSafe)
+                jsonData = try Data(contentsOf: result.downloadingFileURL,  options: Data.ReadingOptions.mappedIfSafe)
                 }
                 
                 catch let error as NSError{
@@ -319,7 +344,7 @@ class CoreNetwork {
 
                 
                 let lists = List.listsFromResults(listsDict, context: context)
-                context.saveContext()
+                coreDataStack.saveContext()
                 
                 // get all the lists and download movie info where list.movies
                 // is empty
@@ -331,8 +356,8 @@ class CoreNetwork {
                             log.error("\(error.localizedDescription)")
                         } else {
                             
-                            let movies = Movie.moviesFromResults(result!, listID: list.id!, context: context)
-                            context.saveContext()
+                            let movies = Movie.moviesFromResults(result! as [[String : AnyObject]], listID: list.id!, context: context)
+                             coreDataStack.saveContext()
                             
                         }
                         

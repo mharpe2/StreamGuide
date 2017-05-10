@@ -188,7 +188,7 @@ class MovieDetailViewController: UITableViewController {
         if let favoriteMovie = movie {
             print("add to Favorites")
             favoriteMovie.onWatchlist = NSNumber(value: true as Bool)
-            CoreDataStackManager.sharedInstance().coreDataStack!.mainQueueContext.saveContext()
+            coreDataStack.saveContext()
         }
     }
 }

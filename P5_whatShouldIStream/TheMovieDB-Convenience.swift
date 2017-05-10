@@ -13,16 +13,16 @@ import CoreData
 
 extension TheMovieDB {
     
-    func getMoviesFromList(_ list: List, completionHandler: @escaping (_ result: [[String : AnyObject]]?, _ error: NSError?) -> Void) {
+    func getMoviesFromList(_ list: List, completionHandler: @escaping (_ result: [[String : Any]]?, _ error: NSError?) -> Void) {
         //removed nsmanaged context from function. -was not used
         
         // Query TMDB
         let resource = TheMovieDB.Resources.ListID
-        var parameters = [String:AnyObject]()
+        var parameters = [String: Any]()
         
-        parameters[TheMovieDB.Keys.ID] = list.id as AnyObject?
+        parameters[TheMovieDB.Keys.ID] = list.id as Any?
         
-        TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters){ JSONResult, error  in
+        _ = TheMovieDB.sharedInstance().taskForResource(resource, parameters: parameters){ JSONResult, error  in
             if let error = error {
                 print(error)
                 completionHandler(nil, error)
@@ -31,7 +31,7 @@ extension TheMovieDB {
             } else {
                 
                 let domainText = "Creating list"
-                guard let listDictionary = JSONResult as? [String: AnyObject] else {
+                guard let listDictionary = JSONResult as? [String: Any] else {
                     let errorText = "Can't create dictionary from result"
                     print("\(errorText)")
                     
@@ -40,7 +40,12 @@ extension TheMovieDB {
                     return
                 }
                 
-                if let results = JSONResult?.value(forKey: "items") as? [[String : AnyObject]] {
+                guard let newResults = JSONResult as? [String: Any] else {
+                    log.error()
+                    return
+                }
+                //if let results = JSONResult?.value(forKey: "items") as? [[String : AnyObject]] {
+                if let results = newResults["items"] as? [[String : Any]] {
                     
                     //let movies = Movie.moviesFromResults(results, listID: list.id!)
                     //list.movies = movies
@@ -59,7 +64,7 @@ extension TheMovieDB {
         
         // Query TMDB
         let resource = TheMovieDB.Resources.MovieGenreList
-        let mutableParameters = [String:AnyObject]()
+        let mutableParameters = [String: Any]()
         TheMovieDB.sharedInstance().taskForResource(resource, parameters: mutableParameters){ JSONResult, error  in
             
             var genres: [Int: String] = [:]
@@ -69,7 +74,7 @@ extension TheMovieDB {
                 completionHandler(nil, error)
                 
             } else {
-               if let results = JSONResult?.value(forKey: "genres") as? [[String: AnyObject]] {
+               if let results = (JSONResult as AnyObject).value(forKey: "genres") as? [[String: AnyObject]] {
                     print(results)
                     for i in results {
                         if let id = i["id"] as? Int {
@@ -100,7 +105,7 @@ extension TheMovieDB {
                 return
                 
             } else {
-                if let results = JSONResult?.value(forKey: "results") as? [[String: AnyObject]] {
+                if let results = (JSONResult as AnyObject).value(forKey: "results") as? [[String: AnyObject]] {
                     log.info("found \(results.count) videos"  )
                     completionHandler(results, nil)
                     return

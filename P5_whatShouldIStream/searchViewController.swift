@@ -20,31 +20,28 @@ class searchViewController: UIViewController { //DZNEmptyDataSetSource, DZNEmpty
     var searchController = UISearchController(searchResultsController: nil)
     var searchBar: UISearchBar!
     
-    lazy var mainContext = {
-        return CoreDataStackManager.sharedInstance().coreDataStack!.mainQueueContext
-    }
     
     
     // fetchedResultsController
-    lazy var fetchedResultsController: FetchedResultsController<Movie> = {
-        
-        let fetchRequest = NSFetchRequest(entityName: Movie.entityName)
-        //fetchRequest.predicate = NSPredicate(format: "location == %@", self.selectedLocation)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        fetchRequest.sortDescriptors = []
-        
-        //Create fetched results controller with the new fetch request.
-        var fetchedResultsController = FetchedResultsController<Movie>(fetchRequest: fetchRequest,
-                                                                       managedObjectContext: self.mainContext(),
-                                                                       sectionNameKeyPath: nil,
-                                                                       cacheName: nil)
-        return fetchedResultsController
-    }()
-    
-    lazy var frcDelegate: MoviesFetchedResultsTableViewControllerDelegate = {
-        return MoviesFetchedResultsTableViewControllerDelegate(tableView: self.tableView )
-    }()
-
+//    lazy var fetchedResultsController: NSFetchedResultsController<Movie> = {
+//        
+//        let fetchRequest = NSFetchRequest(entityName: Movie.entityName)
+//        //fetchRequest.predicate = NSPredicate(format: "location == %@", self.selectedLocation)
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//        fetchRequest.sortDescriptors = []
+//        
+//        //Create fetched results controller with the new fetch request.
+//        var fetchedResultsController = FetchedResultsController<Movie>(fetchRequest: fetchRequest,
+//                                                                       managedObjectContext: self.mainContext(),
+//                                                                       sectionNameKeyPath: nil,
+//                                                                       cacheName: nil)
+//        return fetchedResultsController
+//    }()
+//    
+//    lazy var frcDelegate: MoviesFetchedResultsTableViewControllerDelegate = {
+//        return MoviesFetchedResultsTableViewControllerDelegate(tableView: self.tableView )
+//    }()
+//
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,17 +102,17 @@ extension searchViewController: UISearchBarDelegate {
             
             // print(jsonResult)
             
-            if let showDictionaries = jsonResult?.value(forKey: "results") as? [[String: AnyObject]] {
-                self.searchTask = nil
-                
-                // guidebox
-                self.guideboxResults = showDictionaries.map() {
-                    GuideBoxSearchResults(dictionary: $0)
-                } // end guideBoxResults
-            } // end showDictionaries
+//            if let showDictionaries = jsonResult?.value(forKey: "results") as? [[String: AnyObject]] {
+//                self.searchTask = nil
+//                
+//                // guidebox
+//                self.guideboxResults = showDictionaries.map() {
+//                    GuideBoxSearchResults(dictionary: $0)
+//                } // end guideBoxResults
+//            } // end showDictionaries
             
             // Reload the table on the main thread
-            DispatchQueue.main.async {
+            performUIUpdatesOnMain{
                 self.tableView!.reloadData()
             }
             
@@ -198,9 +195,8 @@ extension searchViewController: UISearchResultsUpdating {
                 return
             }
             
-            // print(jsonResult)
             
-            if let showDictionaries = jsonResult?.value(forKey: "results") as? [[String: AnyObject]] {
+            if let showDictionaries = (jsonResult as AnyObject).value(forKey: "results") as? [[String: AnyObject]] {
                 self.searchTask = nil
                 
                 // guidebox

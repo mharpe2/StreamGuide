@@ -15,6 +15,15 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
 {
     
     // segmented control index into coredata group labels
+    let segmentDict = ["top":0, "genres": 1, "goingaway": 2, "upcoming": 3]
+    
+    enum Catagory: String {
+        case Top = "top"
+        case Genres = "genres"
+        case GoingAway = "goingAway"
+        case Upcoming = "upcoming"
+    }
+    
     let topSegment = "top"
     let segment: [String] = ["top", "genres", "goingaway", "upcoming"]
     var selectedListGroup = 0
@@ -26,37 +35,29 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     var imageView: UIImageView!
     
-    
     //MARK: CoreData ------------------------------------------------------------------
-    var listFRC: FetchedResultsController<List>!
+    var listFRC: NSFetchedResultsController<List>!
     
-    lazy var mainContext = {
-        return CoreDataStackManager.sharedInstance().coreDataStack!.mainQueueContext
-    }
-    
-    lazy var genreContext = CoreDataStackManager.sharedInstance().coreDataStack!.newBackgroundWorkerMOC()
-    //lazy var  updateWorkerContext = CoreDataStackManager.sharedInstance().coreDataStack!.newBackgroundWorkerMOC()
-    
-    lazy var frcDelegate: ListFetchedResultsTableViewControllerDelegate = {
-        
-        return ListFetchedResultsTableViewControllerDelegate(tableView: self.tableView)
-    }()
-    
-    fileprivate func getListFRCWithGroup(_ name: String) -> FetchedResultsController<List>
-    {
-        
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: List.entityName)
-        fetchRequest.predicate = NSPredicate(format: "group = %@", name)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
-        fetchRequest.sortDescriptors = []
-        
-        //Create fetched results controller with the new fetch request.
-        let fetchedResultsController = FetchedResultsController<List>(fetchRequest: fetchRequest,
-                                                                      managedObjectContext: self.mainContext(), sectionNameKeyPath: "index", cacheName: nil)
-        //self.tableView.reloadData()
-        return fetchedResultsController
-        
-    }
+//    lazy var frcDelegate: ListFetchedResultsTableViewControllerDelegate = {
+//        
+//        return ListFetchedResultsTableViewControllerDelegate(tableView: self.tableView)
+//    }()
+//    
+//    fileprivate func getListFRCWithGroup(_ name: String) -> FetchedResultsController<List>
+//    {
+//        
+//        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: List.entityName)
+//        fetchRequest.predicate = NSPredicate(format: "group = %@", name)
+//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
+//        fetchRequest.sortDescriptors = []
+//        
+//        //Create fetched results controller with the new fetch request.
+//        let fetchedResultsController = FetchedResultsController<List>(fetchRequest: fetchRequest,
+//                                                                      managedObjectContext: self.mainContext(), sectionNameKeyPath: "index", cacheName: nil)
+//        //self.tableView.reloadData()
+//        return fetchedResultsController
+//        
+//    }
     
     
     //MARK: LifeCycle -------------------------------------------------------------------
@@ -66,36 +67,11 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.delegate = self
+        tableView.dataSource = self
         
-        //TODO: There is a concurency error here!!!! The error does not show because coredata debug
-        // -com.apple.CoreData.ConcurrencyDebug 1 is not enabled.......
-        // * NEED TO FIX
-        
-        //set delegates
-        listFRC = getListFRCWithGroup( segment[selectedListGroup]  )
-        
-        // load exising lists
-        //self.mainContext().performBlockAndWait() {
-        self.mainContext().performBlockAndWait() {
-            do {
-                
-                self.listFRC.setDelegate(self.frcDelegate)
-                try self.listFRC.performFetch()
-            
-            } catch  _ {
-                log.error(" Error fetching lists and movies")
-            }
-            
-            log.info("Found \(self.listFRC.count) ")
-        }
-        
-        self.mainContext().performBlockAndWait() {
-            // check for updated list online
-            CoreNetwork.performUpdateInBackround( self.mainContext() )
-            self.mainContext().saveContext()
-        }
-        
-    }
+        attemptFetch()
+      }
     
     
     //MARK: TableView Methods ------------------------------------------------------------
@@ -104,12 +80,10 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
         //return listFRC.sections?.count ?? 1
         
         if let sections = listFRC.sections, sections.count > 0 {
-            return sections[section].objects.count
+            return sections[section].objects!.count
         } else {
             return 0
         }
-        
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -158,80 +132,17 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         guard let sections = listFRC.sections else { return nil }
-        return sections[section].objects[0].name ?? nil
+        //return sections[section].objects?[0].name as? String ?? nil
+        return sections[section].name
     }
     
     // MARK: Segmented Controller
     
     
     @IBAction func segmentedControlChanged(_ sender: UISegmentedControl) {
-        
-        if sender.selectedSegmentIndex > segment.count {
-            return
-        }
-        
-        let selectedSegment = segment[sender.selectedSegmentIndex]
-        listFRC = getListFRCWithGroup( selectedSegment )
-        listFRC.setDelegate(frcDelegate)
-        
-        log.info("switch group to \(selectedSegment)")
-        
-        do {
-            try self.listFRC.performFetch()
-        }
-        catch _ {
-            log.error("error switching group to \(selectedSegment)")
-            return
-        }
-        
-        
-        var rankedGenres: [Genre]? = []
-        if selectedSegment == "genres" {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Genre.entityName)
-            fetchRequest.sortDescriptors = []
-            
-            mainContext().performBlock() {
-                do {
-                    if let fetchResults = try self.mainContext().executeFetchRequest(fetchRequest) as? [Genre] {
-                        
-                        rankedGenres = fetchResults
-                        rankedGenres!.sortInPlace({$0.movies!.count > $1.movies!.count})
-                        
-                        // build an array of images
-                        var imageArray: [UIImage] = [UIImage]()
-                        //for genre in rankedGenres! {
-                        let genre = rankedGenres?.first
-                        
-                        if let genreMovies = genre!.movies {
-                            for movie in genreMovies {
-                                if let myMovie = movie as? Movie {
-                                    if let image = myMovie.posterImage{
-                                        let thumbnail = self.makeThumbNail(image)
-                                        imageArray.append(thumbnail)
-                                    }
-                                }
-                            }
-                        }
-                        //} // End for genre in rankedGenres
-                        
-                        //                        // dispaly image collage
-                        //                        let collageImage = CollageImage.collageImage(self.view.frame, images: imageArray)
-                        //                        self.imageView = UIImageView(image: collageImage)
-                        //                        //self.imageView.contentMode = .TopLeft
-                        //                        self.view.addSubview(self.imageView)
-                        
-                    }
-                } catch _ {
-                    log.error("fuckall")
-                }
-                
-            }
-        } // end of special "genres" case
-
+            attemptFetch()
+            tableView.reloadData()
     }
-    
-    
-    
     
     func makeThumbNail(_ image: UIImage) -> UIImage {
         
@@ -307,7 +218,10 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         }
         
         log.info("tag: \(collectionView.tag)")
-        return sections[collectionView.tag].objects[0].movies!.count ?? 0
+        let moviesInSection = sections[collectionView.tag].objects?[0] as! [Movie]
+        //return sections[collectionView.tag].objects?[0].movies!.count ?? 0
+        return  moviesInSection.count //sections[collectionView.tag].objects?[0].movies!.count
+        
         
     }
     
@@ -325,9 +239,15 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             return UICollectionViewCell()
         }
         
-        let allListsInSection = sections[collectionView.tag].objects
-        let movies = allListsInSection[0].movies
-        let movie = movies![indexPath.row] as! Movie
+        guard let allListsInSection = sections[collectionView.tag].objects as? [List],
+                    let movies = allListsInSection[0].movies,
+                    let movie = movies[indexPath.row] as? Movie else {
+            
+            return UICollectionViewCell()
+        }
+        
+//        let movies = allListsInSection[0].movies
+//        let movie = movies?[indexPath.row]
         
         // Set cell defaults
         cell.picture!.image = UIImage(named: "filmRole")
@@ -343,15 +263,16 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
                     cell.activityIndicator.stopAnimating()
                 }
             } else {
-                TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.RowPoster, filePath: posterPath, completionHandler: { (imageData, error) in
+                _ = TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.RowPoster, filePath: posterPath, completionHandler: { (imageData, error) in
                     if let image = UIImage(data: imageData!) {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        //dispatch_async(dispatch_get_main_queue()) {
+                        performUIUpdatesOnMain() {
                             cell.picture!.image = image
                             movie.posterImage = image
                             cell.activityIndicator.stopAnimating()
                         }
                     } else {
-                        print(error)
+                        log.error()
                         cell.activityIndicator.stopAnimating()
                     }
                 }) // end tmbd closure
@@ -370,14 +291,67 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             return
         }
         
-        let allListsInSection = sections[collectionView.tag].objects
-        let movies = allListsInSection[0].movies
-        let movie = movies![indexPath.row] as! Movie
+        let allListsInSection = sections[collectionView.tag].objects as! [List]
+        let movies =  allListsInSection[0].movies
+        let movie = movies?[indexPath.row] as? Movie
+        
+        
+//        let allListsInSection = sections[collectionView.tag].objects
+//        let movies = allListsInSection[0].movies as? [Movie]
+//        let movie = movies![indexPath.row] as! Movie
         
         let movieDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "MovieDetailViewController") as! MovieDetailViewController
         movieDetailViewController.movie = movie
         self.present(movieDetailViewController, animated: true) {                
             // Code
+        }
+    }
+    
+    func attemptFetch() {
+       
+        
+        let fetchRequest: NSFetchRequest<List> = List.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
+        
+        let topPred = NSPredicate(format: "group = %@", Catagory.Top.rawValue)
+        let genresPred = NSPredicate(format: "group = %@", Catagory.Genres.rawValue)
+        let goingAwayPred = NSPredicate(format: "group = %@", Catagory.GoingAway.rawValue)
+        let upcomingPred = NSPredicate(format: "group = %@", Catagory.Upcoming.rawValue)
+        
+        if segmentedControl.selectedSegmentIndex == segmentDict[Catagory.Top.rawValue] {
+            
+             fetchRequest.predicate = topPred
+            
+        } else if segmentedControl.selectedSegmentIndex == segmentDict[Catagory.Genres.rawValue]  {
+            
+             fetchRequest.predicate = genresPred
+            
+        } else if segmentedControl.selectedSegmentIndex == segmentDict[Catagory.GoingAway.rawValue] {
+            
+             fetchRequest.predicate = goingAwayPred
+            
+        } else if segmentedControl.selectedSegmentIndex == segmentDict[Catagory.Upcoming.rawValue] {
+            
+             fetchRequest.predicate = upcomingPred
+        }
+
+        //FetchedResultsController<List>(fetchRequest: fetchRequest,
+        //                                                                      managedObjectContext: self.mainContext(), sectionNameKeyPath: "index", cacheName: nil)
+
+        let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: "index", cacheName: nil)
+        
+        listFRC.delegate = self
+        self.listFRC = controller
+        
+        do {
+            
+            try controller.performFetch()
+            
+        } catch {
+            
+            let error = error as NSError
+            log.error("\(error.localizedDescription)" )
+            
         }
     }
 } // End of extension of class
