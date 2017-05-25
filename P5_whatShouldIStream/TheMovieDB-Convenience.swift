@@ -114,26 +114,7 @@ extension TheMovieDB {
             
             log.error("Could not find value for key")
         
-//        let postData = NSData(data: "{}".dataUsingEncoding(NSUTF8StringEncoding)!)
-//        
-//        var request =URLRequest(URL: NSURL(string: "https://api.themoviedb.org/3/movie/%7Bmovie_id%7D/videos?language=en-US&api_key=%3C%3Capi_key%3E%3E")!,
-//                                          cachePolicy: .UseProtocolCachePolicy,
-//                                          timeoutInterval: 10.0)
-//        request.HTTPMethod = "GET"
-//        request.HTTPBody = postData
-//        
-//        let session = NSURLSession.sharedSession()
-//        let dataTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-//            if (error != nil) {
-//                log.error("\(error?.localizedDescription)")
-//            } else {
-//                let httpResponse = response as? NSHTTPURLResponse
-//                //println(httpResponse)
-//            }
-//        })
-//        
-//        dataTask.resume()
-            return
+           return
     }
  }
 
