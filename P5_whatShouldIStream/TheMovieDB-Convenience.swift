@@ -95,12 +95,12 @@ extension TheMovieDB {
         //let mutableParameters = [String:AnyObject]()
        let  mutableParameters = [Keys.ID: movieId]
         
-        TheMovieDB.sharedInstance().taskForResource(resource, parameters: mutableParameters) { JSONResult, error in
+        _ = TheMovieDB.sharedInstance().taskForResource(resource, parameters: mutableParameters) { JSONResult, error in
             
-            print("\(JSONResult)")
+            log.info("\(JSONResult ?? "Failed Downloading Trailers")")
 
             if let error = error {
-                print("\(error.localizedDescription)")
+                log.error("\(error.localizedDescription)")
                 completionHandler(nil, error)
                 return
                 
