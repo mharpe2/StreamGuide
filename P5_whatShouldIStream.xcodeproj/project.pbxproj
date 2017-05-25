@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33C81CEDC06CA629D79B98F5 /* Pods_P5_whatShouldIStream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD88BF4E5114E059736BCA0C /* Pods_P5_whatShouldIStream.framework */; };
+		33C81CEDC06CA629D79B98F5 /* Pods_P5_whatShouldIStream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD88BF4E5114E059736BCA0C /* Pods_P5_whatShouldIStream.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		7905805C1CEF60FD0002EF3C /* GuideBox-Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7905805B1CEF60FD0002EF3C /* GuideBox-Constants.swift */; };
 		7905805E1CEF611B0002EF3C /* GuideBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7905805D1CEF611B0002EF3C /* GuideBox.swift */; };
 		791F9B9B1CC464AF0052884D /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791F9B9A1CC464AF0052884D /* SettingsTableViewController.swift */; };
@@ -32,7 +32,7 @@
 		7999F4D11CD832CB00C60B80 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999F4CB1CD832CB00C60B80 /* ImageCache.swift */; };
 		7999F4D21CD832CB00C60B80 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999F4CC1CD832CB00C60B80 /* Config.swift */; };
 		7999F4D91CD910FE00C60B80 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7999F4D71CD910FE00C60B80 /* Model.xcdatamodeld */; };
-		7999F4DC1CDAB2E600C60B80 /* BasicNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999F4DB1CDAB2E600C60B80 /* BasicNetworking.swift */; };
+		7999F4DC1CDAB2E600C60B80 /* CoreNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7999F4DB1CDAB2E600C60B80 /* CoreNetworking.swift */; };
 		79AB07731DCA4773000C0103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79AB07711DCA4773000C0103 /* Main.storyboard */; };
 		79AEB9161CFE70A9004B2D29 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AEB9151CFE70A9004B2D29 /* MovieDetailViewController.swift */; };
 		79D0F8F21D04D46500AAE8EA /* ExploreScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D0F8F11D04D46500AAE8EA /* ExploreScrollViewController.swift */; };
@@ -116,7 +116,7 @@
 		7999F4CB1CD832CB00C60B80 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		7999F4CC1CD832CB00C60B80 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		7999F4D81CD910FE00C60B80 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		7999F4DB1CDAB2E600C60B80 /* BasicNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicNetworking.swift; sourceTree = "<group>"; };
+		7999F4DB1CDAB2E600C60B80 /* CoreNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreNetworking.swift; sourceTree = "<group>"; };
 		79AB07721DCA4773000C0103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		79AEB9151CFE70A9004B2D29 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
 		79D0F8F11D04D46500AAE8EA /* ExploreScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreScrollViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +124,15 @@
 		79D0F8FA1D06513E00AAE8EA /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		79DA713F1DF85D6E00B8F435 /* Videos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Videos.swift; sourceTree = "<group>"; };
 		79DBDD8F1D2185550006E3BB /* MovieDetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDetailCell.swift; sourceTree = "<group>"; };
+		79DFFC921EC3CEE0002C15DF /* AWSCognito.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSCognito.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/AWSCognito/AWSCognito.framework"; sourceTree = "<group>"; };
+		79DFFC931EC3CEE0002C15DF /* AWSCognitoIdentityProvider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSCognitoIdentityProvider.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/AWSCognitoIdentityProvider/AWSCognitoIdentityProvider.framework"; sourceTree = "<group>"; };
+		79DFFC941EC3CEE0002C15DF /* AWSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSCore.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/AWSCore/AWSCore.framework"; sourceTree = "<group>"; };
+		79DFFC951EC3CEE0002C15DF /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSS3.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/AWSS3/AWSS3.framework"; sourceTree = "<group>"; };
+		79DFFC961EC3CEE0002C15DF /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/ChameleonFramework/ChameleonFramework.framework"; sourceTree = "<group>"; };
+		79DFFC971EC3CEE0002C15DF /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NVActivityIndicatorView.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/NVActivityIndicatorView/NVActivityIndicatorView.framework"; sourceTree = "<group>"; };
+		79DFFC981EC3CEE0002C15DF /* ObjcExceptionBridging.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjcExceptionBridging.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/ObjcExceptionBridging/ObjcExceptionBridging.framework"; sourceTree = "<group>"; };
+		79DFFC991EC3CEE0002C15DF /* ReachabilitySwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReachabilitySwift.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/ReachabilitySwift/ReachabilitySwift.framework"; sourceTree = "<group>"; };
+		79DFFC9A1EC3CEE0002C15DF /* XCGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCGLogger.framework; path = "../../../../../Developer/Xcode/DerivedData/Build/Products/Debug-iphonesimulator/XCGLogger/XCGLogger.framework"; sourceTree = "<group>"; };
 		79E2F7361DEF3D13003A7FCE /* List+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "List+CoreDataClass.swift"; sourceTree = "<group>"; };
 		79E2F7371DEF3D13003A7FCE /* List+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "List+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		79E2F73A1DEF4090003A7FCE /* Movie+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -168,6 +177,15 @@
 		5B7A6ED9FD4A79237AD64A94 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				79DFFC921EC3CEE0002C15DF /* AWSCognito.framework */,
+				79DFFC931EC3CEE0002C15DF /* AWSCognitoIdentityProvider.framework */,
+				79DFFC941EC3CEE0002C15DF /* AWSCore.framework */,
+				79DFFC951EC3CEE0002C15DF /* AWSS3.framework */,
+				79DFFC961EC3CEE0002C15DF /* ChameleonFramework.framework */,
+				79DFFC971EC3CEE0002C15DF /* NVActivityIndicatorView.framework */,
+				79DFFC981EC3CEE0002C15DF /* ObjcExceptionBridging.framework */,
+				79DFFC991EC3CEE0002C15DF /* ReachabilitySwift.framework */,
+				79DFFC9A1EC3CEE0002C15DF /* XCGLogger.framework */,
 				87AC58E26565A829069A6B60 /* Pods.framework */,
 				CD88BF4E5114E059736BCA0C /* Pods_P5_whatShouldIStream.framework */,
 			);
@@ -322,7 +340,7 @@
 			isa = PBXGroup;
 			children = (
 				7999F4CB1CD832CB00C60B80 /* ImageCache.swift */,
-				7999F4DB1CDAB2E600C60B80 /* BasicNetworking.swift */,
+				7999F4DB1CDAB2E600C60B80 /* CoreNetworking.swift */,
 			);
 			name = Networking;
 			sourceTree = "<group>";
@@ -537,7 +555,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -567,7 +585,7 @@
 				79D0F8F41D04D99400AAE8EA /* StreamingServiceRow.swift in Sources */,
 				7999F4D11CD832CB00C60B80 /* ImageCache.swift in Sources */,
 				79651F0E1DDD4E7E002D14AF /* tabBarController.swift in Sources */,
-				7999F4DC1CDAB2E600C60B80 /* BasicNetworking.swift in Sources */,
+				7999F4DC1CDAB2E600C60B80 /* CoreNetworking.swift in Sources */,
 				7905805E1CEF611B0002EF3C /* GuideBox.swift in Sources */,
 				79E2F73C1DEF4090003A7FCE /* Movie+CoreDataClass.swift in Sources */,
 				79E2F7421DEF42CF003A7FCE /* Genre+CoreDataClass.swift in Sources */,
@@ -674,7 +692,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -717,7 +735,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -739,7 +757,7 @@
 					"$(PROJECT_DIR)/P5_whatShouldIStream/Sdk/Aws",
 				);
 				INFOPLIST_FILE = P5_whatShouldIStream/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Harper.P5-whatShouldIStream";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -758,7 +776,7 @@
 					"$(PROJECT_DIR)/P5_whatShouldIStream/Sdk/Aws",
 				);
 				INFOPLIST_FILE = P5_whatShouldIStream/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Harper.P5-whatShouldIStream";
 				PRODUCT_NAME = "$(TARGET_NAME)";

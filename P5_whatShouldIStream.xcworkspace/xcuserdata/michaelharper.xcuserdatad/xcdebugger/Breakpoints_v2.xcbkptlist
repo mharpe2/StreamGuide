@@ -31,11 +31,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "P5_whatShouldIStream/BasicNetworking.swift"
-            timestampString = "508891994.320155"
+            timestampString = "516389818.300029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "314"
-            endingLineNumber = "314"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
             landmarkName = "performUpdateInBackround(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -47,7 +47,39 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "P5_whatShouldIStream/BasicNetworking.swift"
-            timestampString = "508891994.320155"
+            timestampString = "516389818.300029"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "345"
+            endingLineNumber = "345"
+            landmarkName = "performUpdateInBackround(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/BasicNetworking.swift"
+            timestampString = "516389818.300029"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "335"
+            endingLineNumber = "335"
+            landmarkName = "performUpdateInBackround(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/BasicNetworking.swift"
+            timestampString = "516389818.300029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "321"
@@ -63,43 +95,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "P5_whatShouldIStream/BasicNetworking.swift"
-            timestampString = "508891994.320155"
+            timestampString = "516389818.300029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "311"
-            endingLineNumber = "311"
-            landmarkName = "performUpdateInBackround(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "P5_whatShouldIStream/BasicNetworking.swift"
-            timestampString = "508891994.320155"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "297"
-            endingLineNumber = "297"
-            landmarkName = "performUpdateInBackround(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "P5_whatShouldIStream/BasicNetworking.swift"
-            timestampString = "508892192.977183"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "313"
-            endingLineNumber = "313"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
             landmarkName = "performUpdateInBackround(_:)"
             landmarkType = "7">
             <Locations>
@@ -143,12 +143,508 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
-            timestampString = "515798136.249679"
+            timestampString = "517357140.880102"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "309"
-            endingLineNumber = "309"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
+            landmarkName = "ExploreViewController"
+            landmarkType = "4">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "372"
+            endingLineNumber = "372"
+            landmarkName = "attemptFetch()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "349"
+            endingLineNumber = "349"
+            landmarkName = "attemptFetch()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "361"
+            endingLineNumber = "361"
+            landmarkName = "attemptFetch()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "358"
+            endingLineNumber = "358"
+            landmarkName = "attemptFetch()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.(attemptFetch () -&gt; ()).(closure #1)"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "516646032.08806"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "349"
+                  endingLineNumber = "349"
+                  offsetFromSymbolStart = "141">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.(attemptFetch () -&gt; ()).(closure #1).(implicit closure #1)"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "516646032.091415"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "349"
+                  endingLineNumber = "349"
+                  offsetFromSymbolStart = "22">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/List+CoreDataClass.swift"
+            timestampString = "516677089.336626"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "init(dictionary:context:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/CoreNetworking.swift"
+            timestampString = "516747609.271159"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "280"
+            endingLineNumber = "280"
+            landmarkName = "performUpdateInBackround(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/List+CoreDataClass.swift"
+            timestampString = "516818924.984831"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
+            landmarkName = "listsFromResults(_:context:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/CoreNetworking.swift"
+            timestampString = "516817306.477621"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "281"
+            endingLineNumber = "281"
+            landmarkName = "performUpdateInBackround(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/List+CoreDataClass.swift"
+            timestampString = "516818924.984831"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "169"
+            endingLineNumber = "169"
+            landmarkName = "listsFromResults(_:context:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static P5_whatShouldIStream.List.listsFromResults (Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, context : Swift.Optional&lt;__ObjC.NSManagedObjectContext&gt;) -&gt; __ObjC.NSMutableOrderedSet"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/List+CoreDataClass.swift"
+                  timestampString = "516817391.977173"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "449">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "static P5_whatShouldIStream.List.listsFromResults (Swift.Array&lt;Swift.Dictionary&lt;Swift.String, Any&gt;&gt;, context : Swift.Optional&lt;__ObjC.NSManagedObjectContext&gt;) -&gt; __ObjC.NSMutableOrderedSet"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/List+CoreDataClass.swift"
+                  timestampString = "516817391.98013"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "172"
+                  endingLineNumber = "172"
+                  offsetFromSymbolStart = "1015">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
+            landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.collectionView (__ObjC.UICollectionView, cellForItemAt : Foundation.IndexPath) -&gt; __ObjC.UICollectionViewCell"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "517369306.140679"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "252"
+                  endingLineNumber = "252"
+                  offsetFromSymbolStart = "838">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.collectionView (__ObjC.UICollectionView, cellForItemAt : Foundation.IndexPath) -&gt; __ObjC.UICollectionViewCell"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "517369306.143835"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "252"
+                  endingLineNumber = "252"
+                  offsetFromSymbolStart = "1212">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
+            landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "516819415.809192"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "tableView(_:titleForHeaderInSection:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.tableView (__ObjC.UITableView, titleForHeaderInSection : Swift.Int) -&gt; Swift.Optional&lt;Swift.String&gt;"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "517339755.653891"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "138"
+                  endingLineNumber = "138"
+                  offsetFromSymbolStart = "400">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.tableView (__ObjC.UITableView, titleForHeaderInSection : Swift.Int) -&gt; Swift.Optional&lt;Swift.String&gt;"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "517339755.655351"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "138"
+                  endingLineNumber = "138"
+                  offsetFromSymbolStart = "1223">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517338912.720471"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
+            landmarkName = "tableView(_:titleForHeaderInSection:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517340258.726649"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "numberOfSections(in:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.numberOfSections (in : __ObjC.UICollectionView) -&gt; Swift.Int"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "517369306.159482"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "214"
+                  endingLineNumber = "214"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "P5_whatShouldIStream.ExploreViewController.(numberOfSections (in : __ObjC.UICollectionView) -&gt; Swift.Int).(implicit closure #1)"
+                  moduleName = "P5_whatShouldIStream"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/michaelharper/Library/Mobile%20Documents/com~apple~CloudDocs/Projects/Udacity/P5_whatShouldIStreamXCODE8.3.2/P5_whatShouldIStream/ExploreScrollViewController.swift"
+                  timestampString = "517369306.162667"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "214"
+                  endingLineNumber = "214"
+                  offsetFromSymbolStart = "32">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
+            landmarkName = "collectionView(_:numberOfItemsInSection:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "297"
+            endingLineNumber = "297"
             landmarkName = "collectionView(_:didSelectItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517355586.006976"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
+            landmarkName = "numberOfSections(in:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
+            landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
+            landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/ExploreScrollViewController.swift"
+            timestampString = "517357140.880102"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
+            landmarkName = "collectionView(_:cellForItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "P5_whatShouldIStream/CoreNetworking.swift"
+            timestampString = "517368783.361319"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
+            landmarkName = "performUpdateInBackround(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

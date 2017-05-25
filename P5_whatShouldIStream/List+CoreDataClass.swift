@@ -15,7 +15,7 @@ open class List: NSManagedObject {
     open static let entityName = "List"
     
     override open var description: String {
-        return "Listid \(id), Name \(name), Date \(date)"
+        return "Listid \(id ?? "none"), Name \(name ?? "unnamed"), Date \(String(describing: date))"
     }
     
     struct keys {
@@ -37,7 +37,7 @@ open class List: NSManagedObject {
         super.init(entity: entity, insertInto: context)
     }
     
-    init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
+    init(dictionary: [String : Any], context: NSManagedObjectContext) {
         
         // Core Data
         if let entity =  NSEntityDescription.entity(forEntityName: "List", in: context) {
@@ -81,7 +81,7 @@ open class List: NSManagedObject {
                         
                         for movie in movieResults {
                             // strip optional from movieFromDictionary
-                            if let myMovie = Movie.movieFromDictionary(movie as [String : AnyObject], inManagedObjectContext: self.managedObjectContext!) {
+                            if let myMovie = Movie.movieFromDictionary(movie as [String : Any], inManagedObjectContext: self.managedObjectContext!) {
                                 myMovie.list = self
                                 log.info("added \(myMovie.title)")
                             }
@@ -101,7 +101,7 @@ open class List: NSManagedObject {
     }
     
     
-    class func ListFromDictionary(_ dictionary: [String: AnyObject], inManagedObjectContext context: NSManagedObjectContext ) -> List? {
+    class func ListFromDictionary(_ dictionary: [String: Any], inManagedObjectContext context: NSManagedObjectContext ) -> List? {
         
         //let log = XCGLogger.defaultInstance()
         
@@ -147,7 +147,7 @@ open class List: NSManagedObject {
     }
     
     
-    class func dateFromDictionary(_ dictionary: [String:AnyObject]   ) -> Date? {
+    class func dateFromDictionary(_ dictionary: [String: Any]   ) -> Date? {
         
         var thisDate: Date?
         if let dateStr = dictionary[keys.date] as? String { // extract date
@@ -160,10 +160,9 @@ open class List: NSManagedObject {
     }
     
     /* Helper: Given an array of dictionaries, convert them to an array of List objects */
-    class func listsFromResults(_ results: [[String : AnyObject]], context: NSManagedObjectContext?) -> NSMutableOrderedSet {
+    class func listsFromResults(_ results: [[String : Any]], context: NSManagedObjectContext?) -> NSMutableOrderedSet {
         
         let lists = NSMutableOrderedSet()
-        //let log = XCGLogger.defaultInstance()
         log.info("Creating Lists")
         
         for var result in results {
@@ -177,7 +176,7 @@ open class List: NSManagedObject {
                 
                 do {
                     let foundIt = try context?.fetch(fetchRequest)//List.findFirstInContext(context!, predicate: predicate)
-                    if foundIt == nil {
+                    if foundIt?.count == 0 {
                         lists.add( List(dictionary: result, context: context!) )
                     }
                 }
@@ -194,7 +193,7 @@ open class List: NSManagedObject {
     static func fetchLists(inManagedObjectContext context: NSManagedObjectContext ) -> [List] {
         let error: NSError? = nil
         
-        var results: [AnyObject]?
+        var results: [Any]?
         
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: List.entityName)
         do {
@@ -206,7 +205,7 @@ open class List: NSManagedObject {
         }
         
         if error != nil {
-          log.error("Could not fetch lists: \(error?.localizedDescription)" )
+          log.error("Could not fetch lists: \(String(describing: error?.localizedDescription))" )
         }
         
         return results as! [List]

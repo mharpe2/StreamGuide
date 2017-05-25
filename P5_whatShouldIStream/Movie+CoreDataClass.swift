@@ -39,7 +39,7 @@ open class Movie: NSManagedObject {
         super.init(entity: entity, insertInto: context)
     }
     
-    init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
+    init(dictionary: [String : Any], context: NSManagedObjectContext) {
         
         // Core Data
         if let entity =  NSEntityDescription.entity(forEntityName: "Movie", in: context) {
@@ -110,11 +110,9 @@ open class Movie: NSManagedObject {
     }
     
     
-    class func movieFromDictionary(_ dictionary: [String: AnyObject], inManagedObjectContext context: NSManagedObjectContext ) -> Movie? {
+    class func movieFromDictionary(_ dictionary: [String: Any], inManagedObjectContext context: NSManagedObjectContext ) -> Movie? {
         
-        //let log = XCGLogger.defaultInstance()
-        // Dictionary
-        guard let id = dictionary[Keys.id] as? NSNumber else {
+            guard let id = dictionary[Keys.id] as? NSNumber else {
             log.error("Could not get list id")
             return nil
         }
@@ -134,14 +132,16 @@ open class Movie: NSManagedObject {
     
     
     /* Helper: Given an array of dictionaries, convert them to an array of TMDBMovie objects */
-    class func moviesFromResults(_ results: [[String : AnyObject]], listID: String, context: NSManagedObjectContext?)
+    class func moviesFromResults(_ results: [[String : Any]], listID: String, context: NSManagedObjectContext?) -> [Movie]
     {
+        var movies = [Movie]()
         for result in results {
             
-            Movie.movieFromDictionary(result, inManagedObjectContext: context!)
-            //movies.addObject( Movie(dictionary: result, context: context!) )
+            if let movie = Movie.movieFromDictionary(result, inManagedObjectContext: context!) {
+                 movies.append(movie)
+            }
         }
-        
+        return movies
     }
     
     

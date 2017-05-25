@@ -13,14 +13,13 @@ class GuideBox: NSObject {
     
     typealias CompletionHander = (_ result: Any?, _ error: NSError?) -> Void
     
-    var session: URLSession
+    //var session: URLSession
     
     //var config = Config.unarchivedInstance() ?? Config()
     
-    override init() {
-        session = URLSession.shared
-        super.init()
-    }
+   // override init() {
+   //          super.init()
+   // }
     
     
     // MARK: - All purpose task method for data
@@ -55,7 +54,7 @@ class GuideBox: NSObject {
         
         print(url)
         
-        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, downloadError in
             
             if let error = downloadError {
                 let newError = GuideBox.errorForData(data, response: response, error: error as NSError)

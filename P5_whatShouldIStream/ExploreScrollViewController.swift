@@ -69,8 +69,10 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         tableView.delegate = self
         tableView.dataSource = self
+        TheMovieDB.sharedInstance().config.updateTMDB()
         
         attemptFetch()
+        tableView.reloadData()
       }
     
     
@@ -133,7 +135,7 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         guard let sections = listFRC.sections else { return nil }
         //return sections[section].objects?[0].name as? String ?? nil
-        return sections[section].name
+        return (sections[section].objects?[0] as! List).name //as? String ?? "No Name"
     }
     
     // MARK: Segmented Controller
@@ -205,10 +207,12 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
 extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if let sections = listFRC.sections {
-            return sections.count
-        }
-        return 1
+//        if let sections = listFRC.sections {
+//            return sections.count
+//        }
+//        return 1
+        log.info(listFRC.sections?.count)
+        return listFRC.sections?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -218,9 +222,13 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         }
         
         log.info("tag: \(collectionView.tag)")
-        let moviesInSection = sections[collectionView.tag].objects?[0] as! [Movie]
-        //return sections[collectionView.tag].objects?[0].movies!.count ?? 0
-        return  moviesInSection.count //sections[collectionView.tag].objects?[0].movies!.count
+        //(sections[section].objects?[0] as! List).name
+        //let moviesInSection = sections[collectionView.tag].objects?[0] as! [Movie]
+        print("Section has \(((sections[collectionView.tag].objects?[0]) as! List).movies!.count)) Movies")
+            
+        log.info( ((sections[collectionView.tag].objects?[0]) as! List).movies!.count)
+        return ((sections[collectionView.tag].objects?[0]) as! List).movies!.count   //?.movies?.count ?? 0
+        //return  moviesInSection.count //sections[collectionView.tag].objects?[0].movies!.count
         
         
     }
@@ -234,6 +242,8 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             return UICollectionViewCell()
         }
         
+        //(sections[section].objects?[0] as! List).name
+
         guard let sections = listFRC.sections else {
             log.error("Could not get listFRC.sections")
             return UICollectionViewCell()
@@ -242,6 +252,7 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         guard let allListsInSection = sections[collectionView.tag].objects as? [List],
                     let movies = allListsInSection[0].movies,
                     let movie = movies[indexPath.row] as? Movie else {
+                        log.error("allListsInSection")
             
             return UICollectionViewCell()
         }
@@ -257,7 +268,7 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             cell.activityIndicator.startAnimating()
             
             if let savedImage = movie.posterImage {
-                DispatchQueue.main.async {
+                 performUIUpdatesOnMain() {
                     
                     cell.picture!.image = savedImage
                     cell.activityIndicator.stopAnimating()
@@ -313,7 +324,7 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         let fetchRequest: NSFetchRequest<List> = List.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
         
-        let topPred = NSPredicate(format: "group = %@", Catagory.Top.rawValue)
+        let topPred = NSPredicate(format: "group = %@", "top")//Catagory.Top.rawValue)
         let genresPred = NSPredicate(format: "group = %@", Catagory.Genres.rawValue)
         let goingAwayPred = NSPredicate(format: "group = %@", Catagory.GoingAway.rawValue)
         let upcomingPred = NSPredicate(format: "group = %@", Catagory.Upcoming.rawValue)
@@ -335,17 +346,33 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
              fetchRequest.predicate = upcomingPred
         }
 
-        //FetchedResultsController<List>(fetchRequest: fetchRequest,
-        //                                                                      managedObjectContext: self.mainContext(), sectionNameKeyPath: "index", cacheName: nil)
-
         let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: "index", cacheName: nil)
+        controller.delegate = self
+        listFRC = controller
         
-        listFRC.delegate = self
-        self.listFRC = controller
         
+        if updated == nil {
+        CoreNetwork.getJsonFromAWSS3() {
+            result, error in
+            if (error == nil) {
+                log.error(error?.localizedDescription)
+            } else {
+                print(result ?? "result was nil")
+            }
+            updated = Date()
+            
+            }
+        }
+       
         do {
             
-            try controller.performFetch()
+            
+            if listFRC.fetchedObjects?.count == 0 {
+                log.info("updating Lists")
+                CoreNetwork.performUpdateInBackround(context)
+            }
+            
+            try listFRC.performFetch()
             
         } catch {
             

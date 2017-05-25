@@ -110,7 +110,10 @@ class MovieDetailViewController: UITableViewController {
                             self.posterImage.image! = image
                         }
                     } else {
-                        print(error)
+                        if let error = error {
+                             log.error(error.localizedDescription)
+                        }
+                       
                     }
                 })
             }

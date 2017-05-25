@@ -28,7 +28,7 @@ open class Genre: NSManagedObject {
         super.init(entity: entity, insertInto: context)
     }
     
-    init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
+    init(dictionary: [String : Any], context: NSManagedObjectContext) {
         
         // Core Data
         let entity =  NSEntityDescription.entity(forEntityName: "Genre", in: context)!
@@ -72,7 +72,7 @@ open class Genre: NSManagedObject {
         var genre: Genre? = nil
         
         let predicate = NSPredicate(format: "id == %@", id)
-        let fetchRequest: NSFetchRequest<Genre> = Genre.fetchRequest() //= NSFetchRequest<Genre>(entityName: "Genre")
+        let fetchRequest: NSFetchRequest<Genre> = Genre.fetchRequest()
         fetchRequest.fetchLimit = 1
         fetchRequest.predicate = predicate
         
@@ -98,9 +98,7 @@ open class Genre: NSManagedObject {
         return genres
     }
     
-    class func genreFromDictionary(_ dictionary: [String: AnyObject], inManagedObjectContext context: NSManagedObjectContext ) -> Genre? {
-        
-        //let log = XCGLogger.defaultInstance()
+    class func genreFromDictionary(_ dictionary: [String: Any], inManagedObjectContext context: NSManagedObjectContext ) -> Genre? {
         
         // Dictionary
         guard let id = dictionary[keys.id] as? NSNumber,

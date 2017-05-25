@@ -34,7 +34,7 @@ class awesomeMovieDetailViewController: UIViewController {
                     self.backroundImage.image = savedImage
                 }
             } else {
-                TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.originalPoster, filePath: posterPath, completionHandler: { (imageData, error) in
+                _ = TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.originalPoster, filePath: posterPath, completionHandler: { (imageData, error) in
                     if let image = UIImage(data: imageData! as Data) {
                         DispatchQueue.main.async {
                             self.backroundImage.image = image
@@ -42,7 +42,7 @@ class awesomeMovieDetailViewController: UIViewController {
                             
                         }
                     } else {
-                        log.error("could not download image for \(self.movie.title)")
+                        log.error("could not download image for \(self.movie.title ?? "uknown")")
                     }
                 }) // end tmbd closure
             }
@@ -57,7 +57,9 @@ class awesomeMovieDetailViewController: UIViewController {
             }
             
             else {
-                print("\(results)")
+                if let results = results {
+                    log.info(results)
+                }
             }
             
         }

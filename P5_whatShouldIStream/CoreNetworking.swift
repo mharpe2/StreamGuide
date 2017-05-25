@@ -22,10 +22,10 @@ class CoreNetwork {
     let key = "wsis-master.txt"
 
     
-    class func convertStringToDictionary(_ text: String) -> [String:AnyObject]? {
+    class func convertStringToDictionary(_ text: String) -> [String: Any]? {
         if let data = text.data(using: String.Encoding.utf8) {
             do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             } catch let error as NSError {
                 print(error)
             }
@@ -37,9 +37,9 @@ class CoreNetwork {
         
         let requestURL: URL = URL(string: location)!
         let urlRequest:URLRequest = URLRequest(url: requestURL)
-        let session = URLSession.shared
+       // let session = URLSession.shared
         
-        let task = session.dataTask(with: urlRequest, completionHandler: {
+        let task = URLSession.shared.dataTask(with: urlRequest, completionHandler: {
             (data, response, error) -> Void in
             
             let httpsResponse = response as! HTTPURLResponse
@@ -64,7 +64,7 @@ class CoreNetwork {
         task.resume()
     }
     
-    class func getJsonFromAWSS3(_ bucket: String, key: String, completionHandler: @escaping CompletionHander) {
+    class func getJsonFromAWSS3(_ bucket: String = "wsis-contentdelivery-mobilehub-326483023", key: String = "wsis-master.txt", completionHandler: @escaping CompletionHander) {
         print("View Controller running")
         // Do any additional setup after loading the view, typically from a nib.
         
@@ -100,7 +100,7 @@ class CoreNetwork {
                 try fileManager.removeItem( at: URL(fileURLWithPath: masterFilePath) )
             }
             catch let error as NSError {
-                print("Could't delete file")
+                print("Could't delete file \(error.localizedDescription)")
             }
         }
         
@@ -143,69 +143,6 @@ class CoreNetwork {
             return nil
         })
     }
-    
-            
-//            if (task.error != nil) {
-//                print(task.error)
-//            }
-//            
-//            if (task.result != nil) {
-//                let downloadOutput: AWSS3TransferManagerDownloadOutput = (task.result as? AWSS3TransferManagerDownloadOutput)!
-//                print(downloadOutput)
-//                print("File Downloaded")
-//                var jsonResult =  [String:AnyObject]?()
-//                if let result = task.result as? String {
-//                    
-//                    jsonResult = convertStringToDictionary(result)
-//                    completionHandler(result: jsonResult, error: nil)
-//
-//                }
-//                
-//                completionHandler(result: nil, error: nil)
-//            }
-//            return nil
-//        })
-        
-    
-        //    transferManager.download(downloadRequest).continueWith(executor: AWSExecutor.mainThread(), block: { (task:AWSTask<AnyObject>) -> Any? in
-//    
-//    if let error = task.error as? NSError {
-//    if error.domain == AWSS3TransferManagerErrorDomain, let code = AWSS3TransferManagerErrorType(rawValue: error.code) {
-//    switch code {
-//    case .cancelled, .paused:
-//    break
-//    default:
-//    print("Error downloading: \(downloadRequest.key) Error: \(error)")
-//    }
-//    } else {
-//    print("Error downloading: \(downloadRequest.key) Error: \(error)")
-//    }
-//    return nil
-//    }
-//    print("Download complete for: \(downloadRequest.key)")
-//    let downloadOutput = task.result
-//    return nil
-//    })
-
-    
-//    class func parseJSONWithCompletionHandler(_ data: Data, completionHandler: CompletionHander) {
-//        var parsingError: NSError? = nil
-//        
-//        let parsedResult: AnyObject?
-//        do {
-//            parsedResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
-//        } catch let error as NSError {
-//            parsingError = error
-//            parsedResult = nil
-//        }
-//        
-//        if let error = parsingError {
-//            completionHandler(nil, error)
-//        } else {
-//            
-//            completionHandler(parsedResult, nil)
-//        }
-//    }
     
     
     class func parseJSONWithCompletionHandler(_ data: Data, completionHandler: (_ result: Any?, _ error: NSError?) -> Void) {
@@ -258,14 +195,13 @@ class CoreNetwork {
         let parsedResult: NSDictionary?
         do {
             
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: [JSONSerialization.ReadingOptions.allowFragments,  JSONSerialization.ReadingOptions.mutableContainers]) as! NSDictionary
+            parsedResult = try JSONSerialization.jsonObject(with: data, options: [JSONSerialization.ReadingOptions.allowFragments,  JSONSerialization.ReadingOptions.mutableContainers]) as? NSDictionary
         } catch let error as NSError {
             parsingError = error
             parsedResult = nil
         }
         
         if let error = parsingError {
-            error.localizedDescription
             log.error("Parsing error: \( error.localizedDescription)")
             return nil
         }
@@ -276,7 +212,7 @@ class CoreNetwork {
     
     // URL Encoding a dictionary into a parameter string
     
-    class func escapedParameters(_ parameters: [String : AnyObject]) -> String {
+    class func escapedParameters(_ parameters: [String : Any]) -> String {
         
         var urlVars = [String]()
         
@@ -301,9 +237,6 @@ class CoreNetwork {
     }
     
     class func performUpdateInBackround(_ context: NSManagedObjectContext) -> Int {
-        
-        //var updatesMade = 0
-        //let log = XCGLogger()
         
         //Download list stored in json format
         //CoreNetwork.getJsonFromHttp(MasterLists.googleDriveLocation) {
@@ -331,19 +264,19 @@ class CoreNetwork {
                     return
                 }
                 
-                print("json Result ** \(jsonResult)")
+                //print("json Result ** \(jsonResult)")
                 
                 //convert file to json list
-                guard let listsDict = jsonResult["lists"] as? [[String:AnyObject]] else //as! [[String:AnyObject]] else
+                guard let listsDict = jsonResult["lists"] as? [[String: Any]] else //as! [[String:AnyObject]] else
                 {
                     log.error("Error processing list to dictionary \(jsonResult) ")
                     return
                 }
                 
-                print("List Dict Result ** \(listsDict)")
+                //print("List Dict Result ** \(listsDict)")
 
-                
-                let lists = List.listsFromResults(listsDict, context: context)
+                // Create lists and Save
+                _ = List.listsFromResults(listsDict, context: context)
                 coreDataStack.saveContext()
                 
                 // get all the lists and download movie info where list.movies
@@ -356,8 +289,9 @@ class CoreNetwork {
                             log.error("\(error.localizedDescription)")
                         } else {
                             
-                            let movies = Movie.moviesFromResults(result! as [[String : AnyObject]], listID: list.id!, context: context)
-                             coreDataStack.saveContext()
+                            let movies = Movie.moviesFromResults(result! as [[String : Any]], listID: list.id!, context: context)
+                            list.movies = NSOrderedSet(array: movies)
+                            coreDataStack.saveContext()
                             
                         }
                         

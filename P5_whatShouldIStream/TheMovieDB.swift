@@ -22,13 +22,13 @@ class TheMovieDB : NSObject {
     
     // MARK: - All purpose task method for data
     
-    func taskForResource(_ resource: String, parameters: [String : AnyObject], completionHandler: @escaping CompletionHander) -> URLSessionDataTask {
+    func taskForResource(_ resource: String, parameters: [String : Any], completionHandler: @escaping CompletionHander) -> URLSessionDataTask {
         
         var mutableParameters = parameters
         var mutableResource = resource
         
         // Add in the API Key
-        mutableParameters["api_key"] = Constants.ApiKey as AnyObject
+        mutableParameters["api_key"] = Constants.ApiKey as Any
         
         // Substitute the id parameter into the resource
         if resource.range(of: ":id") != nil {
