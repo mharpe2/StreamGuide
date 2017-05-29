@@ -22,28 +22,7 @@ class searchViewController: UIViewController { //DZNEmptyDataSetSource, DZNEmpty
     
     
     
-    // fetchedResultsController
-//    lazy var fetchedResultsController: NSFetchedResultsController<Movie> = {
-//        
-//        let fetchRequest = NSFetchRequest(entityName: Movie.entityName)
-//        //fetchRequest.predicate = NSPredicate(format: "location == %@", self.selectedLocation)
-//        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        fetchRequest.sortDescriptors = []
-//        
-//        //Create fetched results controller with the new fetch request.
-//        var fetchedResultsController = FetchedResultsController<Movie>(fetchRequest: fetchRequest,
-//                                                                       managedObjectContext: self.mainContext(),
-//                                                                       sectionNameKeyPath: nil,
-//                                                                       cacheName: nil)
-//        return fetchedResultsController
-//    }()
-//    
-//    lazy var frcDelegate: MoviesFetchedResultsTableViewControllerDelegate = {
-//        return MoviesFetchedResultsTableViewControllerDelegate(tableView: self.tableView )
-//    }()
-//
-    
-    override func viewDidLoad() {
+     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         //searchBar.delegate = self
@@ -100,16 +79,6 @@ extension searchViewController: UISearchBarDelegate {
                 return
             }
             
-            // print(jsonResult)
-            
-//            if let showDictionaries = jsonResult?.value(forKey: "results") as? [[String: AnyObject]] {
-//                self.searchTask = nil
-//                
-//                // guidebox
-//                self.guideboxResults = showDictionaries.map() {
-//                    GuideBoxSearchResults(dictionary: $0)
-//                } // end guideBoxResults
-//            } // end showDictionaries
             
             // Reload the table on the main thread
             performUIUpdatesOnMain{
@@ -164,8 +133,8 @@ extension searchViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension searchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        //filterContentForSearchText(searchController.searchBar.text!)
-        print("updating search results")
+      
+        log.info("updating search results")
         searchMoviesOnGuideBox(searchBar.text!)
     }
     
@@ -191,7 +160,7 @@ extension searchViewController: UISearchResultsUpdating {
             [unowned self] jsonResult, error in
             
             if let error = error {
-                print("Error searching for shows: \(error.localizedDescription)" )
+                log.error("Error searching for shows: \(error.localizedDescription)" )
                 return
             }
             
@@ -206,10 +175,10 @@ extension searchViewController: UISearchResultsUpdating {
             } // end showDictionaries
             
             // Reload the table on the main thread
-            DispatchQueue.main.async {
+            performUIUpdatesOnMain () {
                 self.tableView!.reloadData()
+
             }
-            
         } // searchTask
     }
 }

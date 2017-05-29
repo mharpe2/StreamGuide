@@ -66,29 +66,7 @@ class MovieDetailViewController: UITableViewController {
         navItem.title = movie?.title
         navBar.setItems([navItem], animated: true)
         
-        //set movie title & Overview
-        //movieTitle.title = movie?.title
-        //overview.text = movie?.overview
-        //print(overview.text)
-        //overview.sizeToFit()
-
-//        //animate ratings on scrollView
-//        tmdbRating = UILabel()
-//        let formater = NSNumberFormatter()
-//        formater.maximumFractionDigits = 1
-//        if let rating = movie?.voteAverage {
-//            tmdbRating!.text = "TMDB Rating: \(formater.stringFromNumber(rating))"
-//            print(tmdbRating?.text)
-//            tmdbRating?.center = CGPoint(x: 1, y: 12)
-//            ratingsScrollView.addSubview(tmdbRating!)
-
-//            
-//            UIView.animateWithDuration( 0.5, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-//                self.tmdbRating?.center = CGPoint(x: 1, y: 12)
-//                }, completion: nil)
- //       }
-        
-
+     
         //create place holder image
         posterImage!.image = UIImage(named: "filmRole")
 
