@@ -117,6 +117,7 @@ class CoreNetwork {
         // Submit the download request
         let transferManager = AWSS3TransferManager.default()
         log.info("Starting Download of \(String(describing: request?.key))")
+         defaults.set(Date(), forKey: "LastWCISDownload")
         
         
         //var downloadOutput: AWSS3TransferManagerDownloadOutput
@@ -245,9 +246,7 @@ class CoreNetwork {
             (result, error) in
             if error == nil {
                 let result = result as!  AWSS3TransferManagerDownloadRequest
-                print("printing results returned \(result.downloadingFileURL)")
-                //if let jsonData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)
-
+            
                 var jsonData = Data()
                 do {
                 jsonData = try Data(contentsOf: result.downloadingFileURL,  options: Data.ReadingOptions.mappedIfSafe)
@@ -264,10 +263,9 @@ class CoreNetwork {
                     return
                 }
                 
-                //print("json Result ** \(jsonResult)")
                 
                 //convert file to json list
-                guard let listsDict = jsonResult["lists"] as? [[String: Any]] else //as! [[String:AnyObject]] else
+                guard let listsDict = jsonResult["lists"] as? [[String: Any]] else
                 {
                     log.error("Error processing list to dictionary \(jsonResult) ")
                     return

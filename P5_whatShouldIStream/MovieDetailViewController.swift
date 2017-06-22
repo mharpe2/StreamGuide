@@ -42,70 +42,21 @@ class MovieDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.estimatedRowHeight = 64
-        tableView.rowHeight = UITableViewAutomaticDimension
+        configUI()
         
-        // set up header view
-        headerView = tableView.tableHeaderView
-        tableView.tableHeaderView = nil
-        tableView.addSubview(headerView)
-        
-        tableView.contentInset = UIEdgeInsets(top: effectiveHeight, left: 0, bottom: 0, right: 0)
-        tableView.contentOffset = CGPoint(x: 0, y: -effectiveHeight)
-        
-        
-        // table header mask layer
-        headerMaskLayer = CAShapeLayer()
-        headerMaskLayer.fillColor = UIColor.black.cgColor
-        headerView.layer.mask = headerMaskLayer
-        updateHeaderView()
-
-        
-        
-        navItem.leftBarButtonItem = backItem
-        navItem.title = movie?.title
-        navBar.setItems([navItem], animated: true)
-        
-     
-        //create place holder image
-        posterImage!.image = UIImage(named: "filmRole")
-
-        //scrollView.contentSize.height = 1000
-        
-        
-        guard movie != nil else {
+        guard let movie = movie else {
             return
         }
         
-        if movie?.posterImage != nil {
-            //self.posterImage.contentMode = .ScaleAspectFit
-            self.posterImage.image = movie?.posterImage
-        } else {
-            if let posterPath = movie!.posterPath {
-                TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.DetailPoster, filePath: posterPath, completionHandler: { (imageData, error) in
-                    if let image = UIImage(data: imageData!) {
-                        DispatchQueue.main.async {
-                            self.posterImage.image! = image
-                        }
-                    } else {
-                        if let error = error {
-                             log.error(error.localizedDescription)
-                        }
-                       
-                    }
-                })
-            }
-        }
+        downloadMovieDetails(movie: movie)
+        
     }
     
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
     }
-    
-//    @IBAction func buttonPressed(sender: AnyObject) {
-//        dismissViewControllerAnimated(true, completion: nil)
-//    }
-    
+
     func buttonPressed(_ sender: AnyObject) {
         dismiss(animated: true, completion: nil)
     }
@@ -166,10 +117,113 @@ class MovieDetailViewController: UITableViewController {
     }
 
     @IBAction func addToWatchList(_ sender: AnyObject) {
-        if let favoriteMovie = movie {
-            print("add to Favorites")
+        toggleFavoriteButton()
+        coreDataStack.saveContext()
+    }
+    
+    func toggleFavoriteButton() {
+        
+        guard let favoriteMovie = movie else {
+            return
+        }
+        
+        if favoriteMovie.onWatchlist == NSNumber(value: true as Bool) {
+            favoriteMovie.onWatchlist = NSNumber(value: false as Bool)
+            addButton.setImage(#imageLiteral(resourceName: "Blue Heart Filled"), for: UIControlState.normal)        }
+        else {
             favoriteMovie.onWatchlist = NSNumber(value: true as Bool)
-            coreDataStack.saveContext()
+            addButton.setImage(#imageLiteral(resourceName: "red Heart FIlled"), for: UIControlState.normal)
+            
+        }
+    
+    }
+    
+    func syncFavoriteButton() {
+        guard let favoriteMovie = movie else {
+            return
+        }
+
+         if favoriteMovie.onWatchlist == NSNumber(value: true as Bool) {
+             addButton.setImage(#imageLiteral(resourceName: "red Heart FIlled"), for: UIControlState.normal)
+        }
+         else
+        {
+            addButton.setImage(#imageLiteral(resourceName: "Blue Heart Filled"), for: UIControlState.normal)
         }
     }
+    
+    func configUI() {
+        
+        tableView.estimatedRowHeight = 64
+        tableView.rowHeight = UITableViewAutomaticDimension
+        
+        // set up header view
+        headerView = tableView.tableHeaderView
+        tableView.tableHeaderView = nil
+        tableView.addSubview(headerView)
+        
+        tableView.contentInset = UIEdgeInsets(top: effectiveHeight, left: 0, bottom: 0, right: 0)
+        tableView.contentOffset = CGPoint(x: 0, y: -effectiveHeight)
+        
+        
+        // table header mask layer
+        headerMaskLayer = CAShapeLayer()
+        headerMaskLayer.fillColor = UIColor.black.cgColor
+        headerView.layer.mask = headerMaskLayer
+        updateHeaderView()
+        
+        navItem.leftBarButtonItem = backItem
+        navItem.title = movie?.title
+        navBar.setItems([navItem], animated: true)
+        
+        //create place holder image
+        posterImage!.image = UIImage(named: "filmRole")
+        
+        syncFavoriteButton()
+
+        
+    }
+    
+    func downloadMovieDetails(movie: Movie) {
+        
+        // Download larger image if it does not exist already
+        
+        if movie.posterImage != nil {
+            //self.posterImage.contentMode = .ScaleAspectFit
+            self.posterImage.image = movie.posterImage
+        } else {
+            if let posterPath = movie.posterPath {
+                _ = TheMovieDB.sharedInstance().taskForImageWithSize(TheMovieDB.PosterSizes.DetailPoster, filePath: posterPath, completionHandler: { (imageData, error) in
+                    if let image = UIImage(data: imageData!) {
+                        DispatchQueue.main.async {
+                            self.posterImage.image! = image
+                        }
+                    } else {
+                        if let error = error {
+                            log.error(error.localizedDescription)
+                        }
+                        
+                    }
+                })
+            }
+        }
+        
+        
+        // Download trailers.
+        
+        TheMovieDB.sharedInstance().getVideos(movie.tmdb_id!) {
+            results, error in
+            if error != nil {
+                log.error("error")
+            }
+                
+            else {
+                if let results = results {
+                    log.info(results)
+                }
+            }
+        }
+
+    }
+    
 }

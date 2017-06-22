@@ -114,7 +114,7 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         guard let sections = listFRC.sections else { return nil }
         //return sections[section].objects?[0].name as? String ?? nil
-        return (sections[section].objects?[0] as! List).name //as? String ?? "No Name"
+        return (sections[section].objects?[0] as! List).name
     }
     
     // MARK: Segmented Controller
@@ -186,10 +186,6 @@ class ExploreViewController: UIViewController, UITableViewDelegate, UITableViewD
 extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        if let sections = listFRC.sections {
-//            return sections.count
-//        }
-//        return 1
         log.info(listFRC.sections?.count)
         return listFRC.sections?.count ?? 0
     }
@@ -207,8 +203,6 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             
         log.info( ((sections[collectionView.tag].objects?[0]) as! List).movies!.count)
         return ((sections[collectionView.tag].objects?[0]) as! List).movies!.count   //?.movies?.count ?? 0
-        //return  moviesInSection.count //sections[collectionView.tag].objects?[0].movies!.count
-        
         
     }
     
@@ -219,11 +213,8 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
-        }
-        
-        //(sections[section].objects?[0] as! List).name
-
-        guard let sections = listFRC.sections else {
+        }        
+            guard let sections = listFRC.sections else {
             log.error("Could not get listFRC.sections")
             return UICollectionViewCell()
         }
@@ -236,8 +227,6 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             return UICollectionViewCell()
         }
         
-//        let movies = allListsInSection[0].movies
-//        let movie = movies?[indexPath.row]
         
         // Set cell defaults
         cell.picture!.image = UIImage(named: "filmRole")
@@ -285,12 +274,7 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         let movies =  allListsInSection[0].movies
         let movie = movies?[indexPath.row] as? Movie
         
-        
-//        let allListsInSection = sections[collectionView.tag].objects
-//        let movies = allListsInSection[0].movies as? [Movie]
-//        let movie = movies![indexPath.row] as! Movie
-        
-        let movieDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "MovieDetailViewController") as! MovieDetailViewController
+        let movieDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "awesomeMovieDetailViewController") as! awesomeMovieDetailViewController
         movieDetailViewController.movie = movie
         self.present(movieDetailViewController, animated: true) {                
             // Code

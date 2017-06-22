@@ -10,6 +10,7 @@
 
 
 import UIKit
+import CoreData
 
 struct MasterLists {
     static let filename = "wsis.txt"
@@ -97,7 +98,30 @@ extension Date {
 
 }
 
-
+extension NSManagedObject {
+    
+//    // prevent list duplicates
+//    if let listId = result[List.keys.id] as? String {
+//        let predicate = NSPredicate(format: "id == %@", listId)
+//        let fetchRequest: NSFetchRequest<List> = List.fetchRequest()
+//        fetchRequest.fetchLimit = 1
+//        fetchRequest.predicate = predicate
+//        
+//        do {
+//            let foundIt = try context?.fetch(fetchRequest)
+//            if foundIt?.count == 0 {
+//                lists.add( List.createFrom(dictionary: result, context: context!) )
+//            }
+//        }
+//        catch _ {
+//        }
+//    }
+//}
+//    func findFirstOf(NSPredicate: NSPredicate) -> NSManagedObjectContext? {
+//        let fetchRequest: NSFetchRequest<NSManagedObject> = NSManagedObject.f
+//    }
+    
+}
 
 extension String {
     

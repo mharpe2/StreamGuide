@@ -9,6 +9,7 @@
 
 import UIKit
 import XCGLogger
+import CoreData
 
 //Global Log
 let log = XCGLogger.default
@@ -19,6 +20,7 @@ let context = coreDataStack.persistentContainer.viewContext
 
 // Track last download of wcis
 var updated: Date? = nil
+let defaults = UserDefaults.standard
 
 
 @UIApplicationMain
@@ -27,9 +29,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+       // record last run
+        defaults.set(Date(), forKey: "LastRun")
+        
+        // NOTE: LastWCISDownload  in defaults
         
         _ = CoreNetwork.performUpdateInBackround(context)
+        
+        // load genre data
+        
+        guard let movieGenreData = fileToNSData("movieGenres", ofType: "json"),
+              let tvGenreData = fileToNSData("tvGenres", ofType: "json") else {
+                    log.error("Could not seed genres")
+                return false
+        }
+
+        Genre.jsonGenreToCoreData(movieGenreData)
+        Genre.jsonGenreToCoreData(tvGenreData)
+        
         
         return true
     }
@@ -58,8 +76,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ =  context.save
     }
     
-    
-    
+  func fileToNSData(_ name: String, ofType:String) -> Data? {
+        
+        guard let filePath = Bundle.main.path(forResource: name, ofType: ofType) else {
+            log.error("could not find seed data file \(name).\(ofType)")
+            return nil
+        }
+        
+        var data: Data
+        do {
+            data = try Data(contentsOf: URL(fileURLWithPath: filePath), options: .mappedIfSafe)
+        }   catch _ {
+            log.error("Could not convert seed data to json")
+            return nil
+        }
+        return data
+    }
+
 }
 
 
@@ -289,23 +322,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //
 //
 //
-//    fileprivate func fileToNSData(_ name: String, ofType:String) -> Data? {
 //
-//        guard let filePath = Bundle.main.path(forResource: name, ofType: ofType) else {
-//            log.error("could not find seed data file \(name).\(ofType)")
-//            return nil
-//        }
-//
-//        var data: Data
-//        do {
-//            data = try Data(contentsOf: URL(fileURLWithPath: filePath), options: .mappedIfSafe)
-//        }   catch _ {
-//            log.error("Could not convert seed data to json")
-//            return nil
-//        }
-//        return data
-//    }
-//    
 //    
 //} // AppDelegate
 //

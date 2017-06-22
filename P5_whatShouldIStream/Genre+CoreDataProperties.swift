@@ -2,8 +2,8 @@
 //  Genre+CoreDataProperties.swift
 //  P5_whatShouldIStream
 //
-//  Created by Michael Harper on 11/30/16.
-//  Copyright © 2016 MJH. All rights reserved.
+//  Created by Michael Harper on 6/4/17.
+//  Copyright © 2017 MJH. All rights reserved.
 //
 
 import Foundation
@@ -13,7 +13,7 @@ import CoreData
 extension Genre {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Genre> {
-        return NSFetchRequest<Genre>(entityName: "Genre");
+        return NSFetchRequest<Genre>(entityName: "Genre")
     }
 
     @NSManaged public var id: NSNumber?

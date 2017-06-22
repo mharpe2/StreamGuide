@@ -2,8 +2,8 @@
 //  Movie+CoreDataProperties.swift
 //  P5_whatShouldIStream
 //
-//  Created by Michael Harper on 11/30/16.
-//  Copyright © 2016 MJH. All rights reserved.
+//  Created by Michael Harper on 6/4/17.
+//  Copyright © 2017 MJH. All rights reserved.
 //
 
 import Foundation
@@ -13,17 +13,17 @@ import CoreData
 extension Movie {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Movie> {
-        return NSFetchRequest<Movie>(entityName: "Movie");
+        return NSFetchRequest<Movie>(entityName: "Movie")
     }
 
     @NSManaged public var guideBoxId: NSNumber?
-    @NSManaged public var id: NSNumber?
     @NSManaged public var onWatchlist: NSNumber?
     @NSManaged public var overview: String?
     @NSManaged public var posterPath: String?
     @NSManaged public var releaseDate: Date?
     @NSManaged public var service: String?
     @NSManaged public var title: String?
+    @NSManaged public var tmdb_id: NSNumber?
     @NSManaged public var type: String?
     @NSManaged public var voteAverage: NSNumber?
     @NSManaged public var actor: Person?

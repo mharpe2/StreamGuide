@@ -2,8 +2,8 @@
 //  Person+CoreDataClass.swift
 //  P5_whatShouldIStream
 //
-//  Created by Michael Harper on 11/30/16.
-//  Copyright © 2016 MJH. All rights reserved.
+//  Created by Michael Harper on 6/4/17.
+//  Copyright © 2017 MJH. All rights reserved.
 //
 
 import Foundation
@@ -11,20 +11,13 @@ import CoreData
 import UIKit
 
 
-open class Person: NSManagedObject {
+public class Person: NSManagedObject {
 
-   open static let entityName = "Person"
-    
     struct Keys {
         static let name = "name"
         static let profilePath = "profile_path"
         static let movies = "movies"
         static let id = "id"
-    }
-    
-    // 4. Include this standard Core Data init method.
-    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertInto: context)
     }
     
     
@@ -47,6 +40,6 @@ open class Person: NSManagedObject {
         set {
             TheMovieDB.Caches.imageCache.storeImage(image, withIdentifier: imagePath!)
         }
-    }
 
+    }
 }

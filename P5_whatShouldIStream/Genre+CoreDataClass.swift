@@ -2,72 +2,56 @@
 //  Genre+CoreDataClass.swift
 //  P5_whatShouldIStream
 //
-//  Created by Michael Harper on 11/30/16.
-//  Copyright © 2016 MJH. All rights reserved.
+//  Created by Michael Harper on 6/4/17.
+//  Copyright © 2017 MJH. All rights reserved.
 //
 
 import Foundation
 import CoreData
 
 
-open class Genre: NSManagedObject {
-    
-    open static let entityName = "Genre"
-    
-    override open var description: String {
-        return "Genre \(id)"
-    }
+public class Genre: NSManagedObject {
     
     struct keys {
         static let id = "id"
         static let name = "name"
     }
     
-     
-    override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertInto: context)
-    }
     
-    init(dictionary: [String : Any], context: NSManagedObjectContext) {
-        
-        // Core Data
-        let entity =  NSEntityDescription.entity(forEntityName: "Genre", in: context)!
-        super.init(entity: entity, insertInto: context)
-        
-        // Dictionary
-        id = dictionary[keys.id] as? NSNumber
-        name = dictionary[keys.name] as? String
-        
+    class func createGenreFrom(dictionary: [String: Any], context: NSManagedObjectContext) -> Genre
+    {
+        let genre = Genre(context: context)
+        genre.id = dictionary[keys.id] as? NSNumber
+        genre.name = dictionary[keys.name] as? String
+        return genre
         
     }
     
-    init(id: Int, name: String, context: NSManagedObjectContext) {
+    class func createGenreFrom(id: Int, name: String, context: NSManagedObjectContext) -> Genre {
         
-        // Core Data
-        let entity =  NSEntityDescription.entity(forEntityName: "Genre", in: context)!
-        super.init(entity: entity, insertInto: context)
+        let genre = Genre(context: context)
+        genre.id = NSNumber(value: id)
+        genre.name = name
+        return genre
         
-        // Dictionary
-        self.id = id as NSNumber
-        self.name = name
     }
+    
     
     // Assign movies to genres / movies to genres
     func genreFromMovies( _ movies: [Movie] ) {
         for movie in movies {
             for genre in movie.genreArray {
-                if let genre = fetchGenreWithId(genre) {
+                if let genre = Genre.fetchGenreWithId(genre) {
                     //genre.movies?.addObject(movies)
                     genre.addToMovies(movie)
                 }
-                
             } // genre in movie
         } // movie in movies
     }
     
     
     // retrieve genre
-    func fetchGenreWithId(_ id: NSNumber) -> Genre? {
+    class func fetchGenreWithId(_ id: NSNumber) -> Genre? {
         
         var genre: Genre? = nil
         
@@ -92,7 +76,7 @@ open class Genre: NSManagedObject {
         let genres = NSMutableOrderedSet()
         
         for (key,value) in results {
-            genres.add( Genre(id: key, name: value, context: context!) )
+            genres.add( Genre.createGenreFrom(id: key, name: value, context: context!) )
         }
         
         return genres
@@ -107,17 +91,41 @@ open class Genre: NSManagedObject {
                 return nil
         }
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: Genre.entityName)
+        let request: NSFetchRequest<Genre> = Genre.fetchRequest()
         request.predicate = NSPredicate(format: "id = %@", id)
         
-        if let genre = (try? context.fetch(request))?.first as? Genre {
+        if let genre = (try? context.fetch(request))?.first {
             return genre
         } else {
             
-            let genre = Genre(dictionary: dictionary, context: context)
+            let genre = Genre.createGenreFrom(dictionary: dictionary, context: context)
             return genre
         }
     }
-
-
+    
+    class func jsonGenreToCoreData(_ json: Data?) {
+        guard let data = json else
+        {
+            log.error("Json not valid NSData")
+            return
+        }
+        
+        // interate Movie Genre data and add to core data
+        let jsonData = CoreNetwork.parseJSON(data)
+        if jsonData != nil {
+            guard let results = jsonData?["genres"] as? [[String:AnyObject]] else {
+                log.error("error converting json results to [[string:anyobjec]]")
+                return
+            }
+            
+            context.performAndWait() {
+                for genre in results {
+                    let g = Genre.genreFromDictionary(genre, inManagedObjectContext: context )
+                    //coreDataStack.saveContext()
+                }
+                coreDataStack.saveContext()
+            }
+        }
+    }
+    
 }
